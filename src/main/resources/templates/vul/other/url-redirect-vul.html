@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend style="color: rgb(30 159 255)" th:text="#{other.redirect.title}">其他漏洞 - URL重定向</legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                        <pre th:text="#{other.redirect.intro.core}">URL重定向</pre>
+                        <pre th:text="#{other.redirect.intro.scenario}">漏洞场景</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="|  #{other.redirect.vul.springMvc}|">  漏洞场景：基于Spring MVC的重定向方式</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">redirect</li>
+                                <li>ModelAndView</li>
+
+
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/URLRedirect/vul1}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="url" style="width: 300px;" required
+                                                       lay-verify="required" value="http://bilibili.com" th:placeholder="#{other.redirect.target}" placeholder="Redirect URL" autocomplete="off"
+                                                       class="layui-input" id="vul1-SpringMvc-redirect-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select"
+                                                        style="background-color: #5eb878;!important;"
+                                                        lay-filter="vul1-SpringMvc-redirect">
+                                                    <option value="" th:text="#{other.redirect.payload}">示例Payload</option>
+                                                    <option value="http://bilibili.com">http://bilibili.com</option>
+                                                    <option value="https://blog.csdn.net/weixin_53009585" th:text="#{other.redirect.authorBlog}">
+                                                        Author Blog
+                                                    </option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul1-SpringMvc-redirect-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.redirect.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <!--    ModelAndView-->
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/URLRedirect/vul2}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="url" style="width: 300px;" required
+                                                       lay-verify="required" value="http://bilibili.com"  th:placeholder="#{other.redirect.target}" placeholder="Redirect URL" autocomplete="off"
+                                                       class="layui-input" id="vul1-SpringMvc-ModelAndView-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul1-SpringMvc-ModelAndView-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.redirect.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.redirect.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{other.redirect.vul.statusTips}">状态码</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{other.redirect.vulnerableCode}|">  缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul1SpringMvcRedirect">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="|  #{other.redirect.vul.servlet}|">  漏洞场景：基于Servlet标准的重定向方式</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">setHeader</li>
+                                <li>sendRedirect</li>
+
+
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/URLRedirect/vul3}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="url" style="width: 300px;" required
+                                                       lay-verify="required" value="http://bilibili.com"  th:placeholder="#{other.redirect.target}" placeholder="Redirect URL" autocomplete="off"
+                                                       class="layui-input" id="vul2-Servlet-redirect-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select"
+                                                        style="background-color: #5eb878;!important;"
+                                                        lay-filter="vul2-Servlet-redirect">
+                                                    <option value="" th:text="#{other.redirect.payload}">示例Payload</option>
+                                                    <option value="http://bilibili.com">http://bilibili.com</option>
+                                                    <option value="https://blog.csdn.net/weixin_53009585" th:text="#{other.redirect.authorBlog}">
+                                                        Author Blog
+                                                    </option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul2-Servlet-setHeader-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.redirect.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/URLRedirect/vul4}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="url" style="width: 300px;" required
+                                                       lay-verify="required" value="http://bilibili.com"  th:placeholder="#{other.redirect.target}" placeholder="Redirect URL" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul2-Servlet-sendRedirect-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.redirect.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.redirect.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{other.redirect.vul.sinkTips}">代码审计SINK点</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{other.redirect.vulnerableCode}|">  缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul2ServletRedirect">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="|  #{other.redirect.vul.springStatus}|">  漏洞场景：基于Spring注解和状态码的重定向方式</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">responseEntityRedirect</li>
+                                <li>annotationRedirect</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/URLRedirect/vul5}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="url" style="width: 300px;" required
+                                                       lay-verify="required" value="http://bilibili.com"  th:placeholder="#{other.redirect.target}" placeholder="Redirect URL" autocomplete="off"
+                                                       class="layui-input" id="vul3-Spring-redirect-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select"
+                                                        style="background-color: #5eb878;!important;"
+                                                        lay-filter="vul3-Spring-redirect">
+                                                    <option value="" th:text="#{other.redirect.payload}">示例Payload</option>
+                                                    <option value="http://bilibili.com">http://bilibili.com</option>
+                                                    <option value="https://blog.csdn.net/weixin_53009585" th:text="#{other.redirect.authorBlog}">
+                                                        Author Blog
+                                                    </option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul3-Spring-responseEntity-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.redirect.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/URLRedirect/vul6}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="url" style="width: 300px;" required
+                                                       lay-verify="required" value="http://bilibili.com"  th:placeholder="#{other.redirect.target}" placeholder="Redirect URL" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul3-Spring-annotation-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.redirect.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.redirect.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{other.redirect.vul.natureTips}">URL跳转本质</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{other.redirect.vulnerableCode}|">  缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul3SpringRedirect">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form;
+            miniTab.listen();
+            layer.msg(/*[[#{other.redirect.toast}]]*/ "其他漏洞-URL重定向")
+            var isEnglishRedirect = /*[[${#locale.language == 'en'}]]*/ false;
+
+            common.selectListenFun("vul1-SpringMvc-redirect", "vul1-SpringMvc-redirect-input")
+            common.selectListenFun("vul2-Servlet-redirect", "vul2-Servlet-redirect-input")
+            common.selectListenFun("vul3-Spring-redirect", "vul3-Spring-redirect-input")
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("vul1SpringMvcRedirect"), Object.assign({}, cmConfig, {
+                value: isEnglishRedirect ? vul1SpringMvcRedirect : vul1SpringMvcRedirectZh
+            }));
+            CodeMirror(document.getElementById("vul2ServletRedirect"), Object.assign({}, cmConfig, {
+                value: isEnglishRedirect ? vul2ServletRedirect : vul2ServletRedirectZh
+            }));
+            CodeMirror(document.getElementById("vul3SpringRedirect"), Object.assign({}, cmConfig, {
+                value: isEnglishRedirect ? vul3SpringRedirect : vul3SpringRedirectZh
+            }));
+        });
+    });
+</script>
+
+</body>
+</html>

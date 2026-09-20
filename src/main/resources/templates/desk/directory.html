@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .desk-form form { display: block; width: auto; }
+    .desk-form form input { margin-right: 0; }
+    .desk-form .layui-form-label { width: 90px; }
+</style>
+<body>
+<div class="layui-fluid desk-form">
+    <div class="layui-card">
+        <div class="layui-card-header">通讯录</div>
+        <div class="layui-card-body">
+            <form class="layui-form" method="get" th:action="@{/directory}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline" style="width: 240px;">
+                        <input type="text" name="name" th:value="${name}" placeholder="按姓名精确查询，留空显示全部" class="layui-input">
+                    </div>
+                    <button class="layui-btn" type="submit">查询</button>
+                </div>
+            </form>
+            <p th:if="${error != null}" style="color:#ff5722;" th:text="${error}"></p>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>职位</th>
+                    <th>部门</th>
+                    <th>备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${people == null or #lists.isEmpty(people)}">
+                    <td colspan="4" style="text-align:center;color:#999;">没有匹配的人员</td>
+                </tr>
+                <tr th:each="p : ${people}">
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.title}"></td>
+                    <td th:text="${p.dept}"></td>
+                    <td th:text="${p.secret}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

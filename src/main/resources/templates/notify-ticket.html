@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">工单状态通知</div>
+        <div class="layui-card-body">
+            <p>这是工单状态变更时发送给处理人的 HTML 通知视图。</p>
+            <p>示例：工单「邮箱无法登录」已从「待处理」变为「处理中」。</p>
+            <p>实际发送时会填入工单标题、状态和处理人。</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

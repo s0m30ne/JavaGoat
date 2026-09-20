@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend style="color: rgb(30 159 255)" th:text="#{infoleak.backup.title}">Information Leakage - Backup Files</legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                        <pre th:text="#{infoleak.backup.intro}">Backup file leakage usually comes from source archives, database backups, logs, temporary archives, or editor backup files.</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{infoleak.backup.source.title}|"> Vulnerable Scenario: Web Source Code Leakage</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{infoleak.backup.openLink}">Open link:</p>
+                                            <a style="color: red" target="_blank"
+                                               href="/other/infoleak/www.zip">www.zip</a>
+
+                                        </div>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{infoleak.backup.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{infoleak.backup.source.tips}">Source backups often contain pom.xml, application.yml, SQL scripts, key configuration, and business code.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{infoleak.backup.vulnerableCode}|">  Vulnerable Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="infoLeakBackUp">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{infoleak.backup.log.title}|"> Vulnerable Scenario: Log Leakage</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{infoleak.backup.openLink}">Open link:</p>
+                                            <a style="color: red" target="_blank"
+                                               href="/other/infoleak/JavaSecLab_logs.txt">JavaSecLab_logs.txt</a>
+                                            <p style="margin-left: 25px" th:text="#{infoleak.backup.encodingTip}">If the redirected file is garbled, switch the encoding to UTF-8.</p>
+                                        </div>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{infoleak.backup.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{infoleak.backup.log.tips}">Logs should not output plaintext passwords, tokens, cookies, captcha codes, full SQL parameters, ID numbers, or other sensitive data.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{infoleak.backup.vulnerableCode}|">  Vulnerable Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="infoLeakLog">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form;
+            miniTab.listen();
+            layer.msg(/*[[#{infoleak.backup.toast}]]*/ "Information Leakage - Backup Files")
+            var isEnglishInfoLeakBackup = /*[[${#locale.language == 'en'}]]*/ false;
+
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("infoLeakBackUp"), Object.assign({}, cmConfig, {
+                value: infoLeakBackUp
+            }));
+            CodeMirror(document.getElementById("infoLeakLog"), Object.assign({}, cmConfig, {
+                value: isEnglishInfoLeakBackup ? infoLeakLog : infoLeakLogZh
+            }));
+
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

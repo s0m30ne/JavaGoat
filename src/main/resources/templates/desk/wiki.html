@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .desk-form form { display: block; width: auto; }
+    .desk-form form input { margin-right: 0; }
+    .desk-form .layui-form-label { width: 90px; }
+    .desk-form .layui-input-block { margin-left: 120px; }
+    .wiki-keyword { margin: 8px 0 16px 120px; color: #666; }
+</style>
+<body>
+<div class="layui-fluid desk-form">
+    <div class="layui-card">
+        <div class="layui-card-header">知识库文章</div>
+        <div class="layui-card-body">
+            <p th:if="${error != null}" style="color:#ff5722;margin-bottom:12px;" th:text="${error}"></p>
+            <form class="layui-form" method="get" th:action="@{/wiki}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">关键词</label>
+                    <div class="layui-input-inline" style="width: 280px;">
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="按标题或内容检索" class="layui-input">
+                    </div>
+                    <button class="layui-btn" type="submit">搜索</button>
+                    <a class="layui-btn layui-btn-normal" href="javascript:;" layuimini-content-href="wiki/new">新建文章</a>
+                </div>
+            </form>
+            <div class="wiki-keyword" th:if="${keyword != null and keyword != ''}">
+                当前检索：<span th:utext="${keyword}"></span>
+            </div>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>标题</th>
+                    <th>作者</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${articles}">
+                    <td th:text="${a.id}"></td>
+                    <td><a th:href="@{/wiki/{id}(id=${a.id})}" th:text="${a.title}"></a></td>
+                    <td th:text="${a.createdBy}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

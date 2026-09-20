@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/common::head}"></head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend style="color: rgb(30 159 255)" th:text="#{file.upload.title}">任意文件操作 - 文件上传</legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <pre th:text="#{file.upload.intro}">  任意文件上传：应用接收用户上传文件时，未对文件类型、内容、存储位置和访问方式做有效限制，攻击者可能上传脚本、HTML/SVG、压缩包或伪装文件。风险不只包括服务端脚本执行，也可能造成存储型 XSS、钓鱼文件分发、恶意文件托管或覆盖业务文件。</pre>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="| #{file.common.vul.native}|"> 漏洞场景：原生漏洞场景</span>
+                            <span class="iconfont">
+                                <a href="/other/datapackage/file/payload/test.jsp" download="test.jsp"
+                                   style="margin-right: 19px;color: #0051ff" th:text="#{file.common.payload}">Payload</a>
+                            </span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/file/upload.pcapng" download="upload.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{file.common.traffic}">流量分析</a>
+                            </span>
+                        </h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <button type="button" class="layui-btn" id="anyFileUpload">
+                                            <i class="layui-icon">&#xe67c;</i><span th:text="#{file.common.selectFile}">选择文件</span>
+                                        </button>
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{file.upload.anyType}">可上传任意类型文件</p>
+                                        </div>
+                                        <button type="button" class="layui-btn layui-btn-normal" id="anyFileUploadButton">
+                                            <span th:text="#{file.common.uploadFile}">上传文件</span>
+                                        </button>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{file.common.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{file.upload.vulTips}">说明</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{file.common.testResult}">测试结果</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="anyFileUpload-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{file.common.vulnerableCode}">缺陷代码</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="anyFileUploadCode"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="| #{file.common.safe.uploadAllowlist}|"> 安全场景：文件上传白名单</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <button type="button" class="layui-btn" id="anyFileUploadWhite">
+                                            <i class="layui-icon">&#xe67c;</i><span th:text="#{file.common.selectFile}">选择文件</span>
+                                        </button>
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{file.upload.imageOnly}">只能上传图片哦！</p>
+                                        </div>
+                                        <button type="button" class="layui-btn layui-btn-normal" id="anyFileUploadWhiteButton">
+                                            <span th:text="#{file.common.uploadFile}">上传文件</span>
+                                        </button>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{file.common.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{file.upload.safeTips}">安全编码建议</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output-safe"></i><span th:text="#{file.common.testResult}">测试结果</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="anyFileUploadWhite-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{file.common.safeCode}|"> 安全代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="anyFileUploadWhiteCode"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['layer', 'miniTab', 'common', 'upload'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab,
+            common = layui.common,
+            upload = layui.upload;
+
+        miniTab.listen();
+        layer.msg(/*[[#{file.upload.toast}]]*/ "任意文件类-文件上传");
+        var isEnglishFile = /*[[${#locale.language == 'en'}]]*/ false;
+
+        function createUploadInstance(config) {
+            return upload.render({
+                elem: config.elem,
+                url: config.url,
+                method: config.method || 'post',
+                accept: config.accept || 'file',
+                auto: config.auto || false,
+                bindAction: config.bindAction,
+                size: config.size || 50 * 1024, // KB
+                multiple: config.multiple || false,
+                drag: config.drag || true,
+                done: function (res) {
+                    console.log("Upload succeeded: " + JSON.stringify(res));
+                    $(config.resultElem).html(res.msg);
+                },
+                error: function () {
+                    console.log("Upload failed");
+                }
+            });
+        }
+
+        function createUploadInstanceWhite(config) {
+            return upload.render({
+                elem: config.elem,
+                url: config.url,
+                method: config.method || 'post',
+                exts: config.exts || 'png|jpg|gif|jpeg|bmp|ico',
+                auto: config.auto || false,
+                bindAction: config.bindAction,
+                size: config.size || 50 * 1024, // KB
+                multiple: config.multiple || false,
+                drag: config.drag || true,
+                done: function (res) {
+                    console.log("Upload succeeded: " + JSON.stringify(res));
+                    $(config.resultElem).html(res.msg);
+                },
+                error: function () {
+                    console.log("Upload failed");
+                }
+            });
+        }
+
+        createUploadInstance({
+            elem: '#anyFileUpload',
+            url: '/file/upload/vul',
+            bindAction: '#anyFileUploadButton',
+            resultElem: '#anyFileUpload-result'
+        });
+
+        createUploadInstanceWhite({
+            elem: '#anyFileUploadWhite',
+            url: '/file/upload/safe',
+            bindAction: '#anyFileUploadWhiteButton',
+            resultElem: '#anyFileUploadWhite-result'
+        });
+
+        var cmConfig = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejin',
+            styleActiveLine: { nonEmpty: true },
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        var cmConfigSafe = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejinsafe',
+            styleActiveLine: { nonEmpty: true },
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        CodeMirror(document.getElementById("anyFileUploadCode"), Object.assign({}, cmConfig, {
+            value: isEnglishFile ? anyFileUploadCode : anyFileUploadCodeZh
+        }));
+
+        CodeMirror(document.getElementById("anyFileUploadWhiteCode"), Object.assign({}, cmConfigSafe, {
+            value: isEnglishFile ? anyFileUploadWhiteCode : anyFileUploadWhiteCodeZh
+        }));
+
+    });
+</script>
+
+</body>
+</html>

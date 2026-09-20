@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .desk-form form { display: block; width: auto; }
+    .desk-form form input { margin-right: 0; }
+    .desk-form .layui-form-label { width: 110px; }
+    .desk-form .layui-input-block { margin-left: 140px; max-width: 720px; }
+    .hint { color: #666; line-height: 1.8; margin: 0 0 16px 0; }
+    .hint code { background: #f6f6f6; padding: 0 4px; }
+</style>
+<body>
+<div class="layui-fluid desk-form">
+    <div class="layui-card">
+        <div class="layui-card-header">通知模板</div>
+        <div class="layui-card-body">
+            <p class="hint">
+                这里管理的是<strong>系统发通知、导出 HTML 时套用的页面视图</strong>，不是知识库文章的排版。<br>
+                工单状态变化、报表导出时，服务端会按视图名去渲染 <code>templates/</code> 下对应的页面文件。
+            </p>
+            <p class="hint">
+                使用方式：先选一个已登记模板并预览；若运维单独部署了新视图，可在「自定义视图名」中填写文件名（不含 <code>.html</code>）再预览。
+            </p>
+            <p th:if="${error != null}" style="color:#ff5722;margin-bottom:12px;" th:text="${error}"></p>
+            <form class="layui-form" method="get" th:action="@{/admin/notify-templates/preview}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">已登记模板</label>
+                    <div class="layui-input-block">
+                        <select name="preset" id="preset" lay-filter="preset">
+                            <option value="notify-ticket">notify-ticket（工单状态通知）</option>
+                            <option value="notify-export">notify-export（报表导出页）</option>
+                            <option value="wiki">wiki（知识库通知）</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">自定义视图名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" id="viewName" value="notify-ticket" class="layui-input" placeholder="对应 templates 目录下的视图文件名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" type="submit">预览模板</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/lib/layui-v2.6.3/layui.js}"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form;
+        form.render();
+        form.on('select(preset)', function (data) {
+            document.getElementById('viewName').value = data.value;
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<style>
+    .wiki-article-body img { max-width: 100%; }
+    .wiki-article-body p { line-height: 1.8; }
+</style>
+<div class="layui-fluid" th:if="${article != null}">
+    <div class="layui-card">
+        <div class="layui-card-header" th:text="${article.title}"></div>
+        <div class="layui-card-body wiki-article-body" th:utext="${article.body}"></div>
+    </div>
+</div>
+</body>
+</html>

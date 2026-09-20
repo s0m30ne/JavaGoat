@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{common/common::head}"></div>
+</head>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" th:text="#{logic.captcha.title.graphic}">逻辑漏洞 - 图形验证码安全</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="background-color: #a7deefab;">
+                        <p>
+                        <pre th:text="#{logic.captcha.graphic.intro.core}">验证码用于提高自动化攻击成本，但它不是认证本身。验证码生成、校验、有效期、使用次数、失败处理和风控联动都必须在服务端完成。</pre>
+                        <pre th:text="#{logic.captcha.graphic.intro.common}">图形验证码常见问题包括验证码复用、固定万能码、图片过于简单可被OCR识别、刷新/失败后未失效，以及验证码接口被滥用造成资源消耗。</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.captcha.graphic.vul1.title}|"> 漏洞场景：验证码失效</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="username" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.username}" placeholder="Username" value="admin"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="password" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.password}" placeholder="Password" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="captcha" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.captcha}" placeholder="Captcha" autocomplete="off"
+                                                       class="layui-input">
+                                                <img name="captcha" class="admin-captcha" width="90" height="30"
+                                                     th:src="@{/logic/captcha/graphic/img}"
+                                                     onclick="this.src='/logic/captcha/graphic/img?' + Math.random()">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul1-graphic-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.captcha.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.captcha.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.captcha.graphic.vul1.tips}">验证码失效</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.captcha.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul1-graphic-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.captcha.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul1Graphic"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.captcha.graphic.vul2.title}|"> 漏洞场景：万能验证码</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="username" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.username}" placeholder="Username" value="admin"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="password" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.password}" placeholder="Password" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="captcha" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.captcha}" placeholder="Captcha" autocomplete="off"
+                                                       class="layui-input">
+                                                <img name="captcha" class="admin-captcha" width="90" height="30"
+                                                     th:src="@{/logic/captcha/graphic/img}"
+                                                     onclick="this.src='/logic/captcha/graphic/img?' + Math.random()">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul2-graphic-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.captcha.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.captcha.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.captcha.graphic.vul2.tips}">万能验证码</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.captcha.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul2-graphic-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.captcha.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul2Graphic"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.captcha.graphic.vul3.title}|"> 漏洞场景：验证码可识别</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="username" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.username}" placeholder="Username" value="admin"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="password" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.password}" placeholder="Password" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="captcha" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.captcha}" placeholder="Captcha" autocomplete="off"
+                                                       class="layui-input">
+                                                <img name="captcha" class="admin-captcha" width="90" height="30"
+                                                     th:src="@{/logic/captcha/graphic/img}"
+                                                     onclick="this.src='/logic/captcha/graphic/img?' + Math.random()">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul3-graphic-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.captcha.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.captcha.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.captcha.graphic.vul3.tips}">验证码可识别</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.captcha.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul3-graphic-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.captcha.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul3Graphic"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="| #{logic.captcha.graphic.safe.title}|"> 安全场景：多因素校验</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="username" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.username}" placeholder="Username" value="admin"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="password" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.password}" placeholder="Password" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="captcha" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.captcha}" placeholder="Captcha" autocomplete="off"
+                                                       class="layui-input">
+                                                <img name="captcha" class="admin-captcha" width="90" height="30"
+                                                     th:src="@{/logic/captcha/graphic/safeImg}"
+                                                     onclick="this.src='/logic/captcha/graphic/safeImg?' + Math.random()">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="safe-graphic-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.captcha.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.captcha.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.captcha.graphic.safe.tips}">安全编码规范</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output-safe"></i><span th:text="#{logic.captcha.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="safe-graphic-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.captcha.safeCode}|"> 安全代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeGraphic"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab,
+            common = layui.common,
+            form = layui.form,
+            upload = layui.upload;
+
+        common.formListenFun("vul1-graphic-button", "", "/logic/captcha/graphic/vul1", "vul1-graphic-result", "post");
+        common.formListenFun("vul2-graphic-button", "", "/logic/captcha/graphic/vul2", "vul2-graphic-result", "post");
+        common.formListenFun("vul3-graphic-button", "", "/logic/captcha/graphic/vul3", "vul3-graphic-result", "post");
+        common.formListenFun("safe-graphic-button", "", "/logic/captcha/graphic/safe", "safe-graphic-result", "post");
+
+        miniTab.listen();
+        layer.msg(/*[[#{logic.captcha.toast}]]*/ "其他漏洞-验证码安全");
+        var isEnglishCaptcha = /*[[${#locale.language == 'en'}]]*/ false;
+
+        var cmConfig = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejin',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        var cmConfigSafe = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejinsafe',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        CodeMirror(document.getElementById("vul1Graphic"), Object.assign({}, cmConfig, {value: isEnglishCaptcha ? vul1Graphic : vul1GraphicZh}));
+        CodeMirror(document.getElementById("vul2Graphic"), Object.assign({}, cmConfig, {value: isEnglishCaptcha ? vul2Graphic : vul2GraphicZh}));
+        CodeMirror(document.getElementById("vul3Graphic"), Object.assign({}, cmConfig, {value: isEnglishCaptcha ? vul3Graphic : vul3GraphicZh}));
+        CodeMirror(document.getElementById("safeGraphic"), Object.assign({}, cmConfigSafe, {value: isEnglishCaptcha ? safeGraphic : safeGraphicZh}));
+    })
+</script>
+
+</body>
+</html>

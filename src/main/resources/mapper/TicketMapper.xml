@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.whgojp.modules.ticket.mapper.TicketMapper">
+    <select id="searchVul" resultType="top.whgojp.modules.ticket.entity.Ticket">
+        SELECT * FROM ticket
+        <where>
+            <if test="q != null and q != ''">
+                title LIKE '%${q}%' OR content LIKE '%${q}%' OR category LIKE '%${q}%'
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy != ''">
+            ORDER BY ${orderBy}
+        </if>
+    </select>
+    <select id="searchMine" resultType="top.whgojp.modules.ticket.entity.Ticket">
+        SELECT * FROM ticket WHERE reporter = #{reporter} ORDER BY id DESC
+    </select>
+</mapper>

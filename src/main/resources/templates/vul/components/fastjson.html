@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" class="fastjson" th:text="#{component.fastjson.title}">Component Vulnerability - Fastjson Deserialization</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                        <pre th:text="#{component.fastjson.intro1}">Fastjson is Alibaba's open-source JSON parser.</pre>
+                        <pre th:text="#{component.fastjson.intro2}">Fastjson reads @type during deserialization.</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{component.common.vul.title}|"> Vulnerable Scenario</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" id="vul-form"
+                                              style="display: flex; justify-content: space-between;">
+                                            <input type="text" style="width: 450px;"
+                                                   value='{"test":{"@type":"java.net.Inet4Address","val":"dnslog.com"}}'
+                                                   autocomplete="off"
+                                                   class="layui-input" id="vul-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul-fastjson-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{common.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{component.fastjson.vul.tips}">DNS out-of-band detection.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{common.testResult}">Test Result</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul-fastjson" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{common.vulnerableCode}|"> Vulnerable Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vulFastjson"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="| #{component.common.safe.title}|"> Safe Scenario</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" id="safe-fastjson-form"
+                                              style="display: flex; justify-content: space-between;">
+                                            <input type="text" style="width: 450px;"
+                                                   value='{"test":{"@type":"java.net.Inet4Address","val":"dnslog.com"}}'
+                                                   autocomplete="off"
+                                                   class="layui-input" id="safe-fastjson-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="safe-fastjson-submit" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{common.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{component.fastjson.safe.tips}">Secure coding guidance.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output-safe"></i><span th:text="#{common.testResult}">Test Result</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="safe-fastjson" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{common.safeCode}|"> Safe Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeFastjson"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form;
+
+            miniTab.listen();
+            layer.msg(/*[[#{component.fastjson.title}]]*/ "Component Vulnerability - Fastjson Deserialization");
+            var isEnglish = /*[[${#locale.language == 'en'}]]*/ false;
+            var codeSnippets = window.componentCodeSnippets || {};
+            var fallbackCodeSnippets = {
+                vulFastjson: typeof vulFastjson !== "undefined" ? vulFastjson : "",
+                vulFastjsonZh: typeof vulFastjsonZh !== "undefined" ? vulFastjsonZh : "",
+                safeFastjson: typeof safeFastjson !== "undefined" ? safeFastjson : "",
+                safeFastjsonZh: typeof safeFastjsonZh !== "undefined" ? safeFastjsonZh : ""
+            };
+
+            function codeSnippet(enName, zhName) {
+                var key = isEnglish ? enName : zhName;
+                return codeSnippets[key] || codeSnippets[enName] || fallbackCodeSnippets[key] || fallbackCodeSnippets[enName] || "";
+            }
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            var cmConfigSafe = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejinsafe',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("vulFastjson"), Object.assign({}, cmConfig, {
+                value: codeSnippet("vulFastjson", "vulFastjsonZh")
+            }));
+            CodeMirror(document.getElementById("safeFastjson"), Object.assign({}, cmConfigSafe, {
+                value: codeSnippet("safeFastjson", "safeFastjsonZh")
+            }));
+
+            function handleFormSubmit(url, inputSelector, outputSelector) {
+                var content = $(inputSelector).val();
+                if (content.length === 0) {
+                    layer.msg(/*[[#{component.common.inputEmpty}]]*/ "Input cannot be empty.");
+                    return false;
+                }
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: content,
+                    success: function (result) {
+                        console.log(result)
+                        $(outputSelector).empty();
+                        $(outputSelector).append(result);
+                    },
+                    error: function () {
+                        layer.alert(/*[[#{component.common.requestFailed}]]*/ "Request failed.");
+                    },
+                });
+
+                return false;
+            }
+
+            form.on('submit(vul-fastjson-submit)', function (data) {
+                return handleFormSubmit("[[@{/fastjson/vul}]]", "#vul-input", "#vul-fastjson");
+            });
+
+            form.on('submit(safe-fastjson-submit)', function (data) {
+                return handleFormSubmit("[[@{/fastjson/safe}]]", "#safe-fastjson-input", "#safe-fastjson");
+            });
+
+        });
+
+        $('.fastjson').hover(function () {
+            $(this).css('cursor', 'pointer');
+            layer.tips(/*[[#{component.common.attackFlow}]]*/ 'Attack Flow', this, {
+                tips: [1, '#0051ff'],
+                time: 2000
+            });
+        });
+
+        $('.fastjson').on('click', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 1,
+                area: ['1116px', '572px'],
+                shadeClose: true,
+                content: '<div style="text-align: center;"><img src="/images/vul/components/fastjson.png" style="width: 100%; height: 50%;"></div>'
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .config-page { max-width: 920px; margin: 0 auto; }
+    .config-page form { display: block; width: auto; }
+    .config-page form input, .config-page form textarea { margin-right: 0; }
+    .hero {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.04);
+        padding: 20px 24px 8px;
+        margin-bottom: 16px;
+    }
+    .hero h2 { margin: 0 0 8px; font-size: 18px; font-weight: 600; text-wrap: balance; }
+    .hero p { margin: 0 0 12px; color: #6b7280; line-height: 1.7; font-size: 13px; }
+    .panel {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.04);
+        overflow: hidden;
+    }
+    .layui-tab-brief > .layui-tab-title { border-bottom: 1px solid #eef1f5; padding: 0 12px; }
+    .layui-tab-content { padding: 20px 24px 24px; }
+    .format-hint { color: #8b95a5; font-size: 12px; line-height: 1.6; margin-bottom: 12px; }
+    .format-hint code { background: #f4f6f8; padding: 0 4px; border-radius: 4px; }
+    .layui-textarea { min-height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+    .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .layui-btn { transition: transform 120ms cubic-bezier(0.2, 0, 0, 1); }
+    .layui-btn:active { transform: scale(0.96); }
+    .result {
+        margin-top: 16px;
+        background: #0f172a;
+        color: #e5e7eb;
+        border-radius: 10px;
+        padding: 12px 14px;
+        min-height: 64px;
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-all;
+        display: none;
+    }
+    .result.show { display: block; }
+    .result.ok { box-shadow: inset 0 0 0 1px rgba(46, 204, 113, .35); }
+    .result.err { box-shadow: inset 0 0 0 1px rgba(231, 76, 60, .45); }
+</style>
+<body>
+<div class="layui-fluid config-page">
+    <div class="hero">
+        <h2>历史配置导入</h2>
+        <p>用于把旧版桌面客户端、巡检脚本导出的配置包导入当前环境。请按导出时的格式选择对应页签，导入后在下方查看解析结果。</p>
+    </div>
+    <div class="panel">
+        <div class="layui-tab layui-tab-brief" lay-filter="configTab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">JSON</li>
+                <li>对象包</li>
+                <li>XML</li>
+                <li>YAML</li>
+                <li>Bean XML</li>
+                <li>任务包</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="format-hint">旧客户端默认导出 <code>application/json</code> 配置。将文件内容粘贴后导入。</div>
+                    <textarea class="layui-textarea" id="jsonBody">{"app":"stackdesk","env":"prod"}</textarea>
+                    <div class="actions">
+                        <button class="layui-btn layui-btn-normal" type="button" onclick="postBody('/admin/config/json', jsonBody.value, 'application/json')">导入 JSON</button>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="format-hint">带类型信息的结构化对象包，来自旧版同步工具。内容为 JSON。</div>
+                    <textarea class="layui-textarea" id="jacksonBody">{"app":"stackdesk"}</textarea>
+                    <div class="actions">
+                        <button class="layui-btn layui-btn-normal" type="button" onclick="postBody('/admin/config/jackson', jacksonBody.value, 'application/json')">导入对象包</button>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="format-hint">XML 配置包，对应旧版 Windows 客户端导出。</div>
+                    <textarea class="layui-textarea" id="xmlBody">&lt;string&gt;ok&lt;/string&gt;</textarea>
+                    <div class="actions">
+                        <button class="layui-btn layui-btn-normal" type="button" onclick="postBody('/admin/config/xml', xmlBody.value, 'application/xml')">导入 XML</button>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="format-hint">YAML 配置，常见于巡检脚本导出。</div>
+                    <form method="post" th:action="@{/admin/config/yaml}" onsubmit="return postForm(this, '/admin/config/yaml');">
+                        <textarea class="layui-textarea" name="payload">app: stackdesk
+env: prod</textarea>
+                        <div class="actions">
+                            <button class="layui-btn layui-btn-normal" type="submit">导入 YAML</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="format-hint">JavaBean XML，用于导入历史持久化片段。</div>
+                    <form method="post" th:action="@{/admin/config/xml-decoder}" onsubmit="return postForm(this, '/admin/config/xml-decoder');">
+                        <textarea class="layui-textarea" name="payload">&lt;string&gt;ok&lt;/string&gt;</textarea>
+                        <div class="actions">
+                            <button class="layui-btn layui-btn-normal" type="submit">导入 Bean XML</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="format-hint">后台任务包为 Base64 文本，来自任务队列导出。</div>
+                    <form method="post" th:action="@{/admin/config/job}" onsubmit="return postForm(this, '/admin/config/job');">
+                        <input class="layui-input" name="payload" placeholder="粘贴 Base64 任务包">
+                        <div class="actions">
+                            <button class="layui-btn layui-btn-normal" type="submit">导入任务包</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <pre class="result" id="importResult"></pre>
+    </div>
+</div>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/lib/layui-v2.6.3/layui.js}"></script>
+<script>
+    layui.use('element', function () {});
+    function showResult(text, ok) {
+        var el = document.getElementById('importResult');
+        el.textContent = text || '';
+        el.className = 'result show ' + (ok ? 'ok' : 'err');
+    }
+    function postBody(url, body, contentType) {
+        fetch(url, { method: 'POST', headers: { 'Content-Type': contentType || 'text/plain' }, body: body })
+            .then(function (r) { return r.text().then(function (t) { showResult(t, r.ok); }); })
+            .catch(function (e) { showResult(String(e), false); });
+    }
+    function postForm(form, url) {
+        var data = new FormData(form);
+        var params = new URLSearchParams();
+        data.forEach(function (value, key) { params.append(key, value); });
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        }).then(function (r) { return r.text().then(function (t) { showResult(t, r.ok); }); })
+          .catch(function (e) { showResult(String(e), false); });
+        return false;
+    }
+</script>
+</body>
+</html>

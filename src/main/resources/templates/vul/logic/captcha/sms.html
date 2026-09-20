@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{common/common::head}"></div>
+</head>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" th:text="#{logic.captcha.title.sms}">逻辑漏洞 - 短信验证码安全</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="background-color: #a7deefab;">
+                        <p>
+                        <pre th:text="#{logic.captcha.sms.intro.core}">短信验证码通常用于登录、找回密码和敏感操作确认，服务端必须绑定手机号、验证码、业务场景、有效期和使用次数。</pre>
+                        <pre th:text="#{logic.captcha.sms.intro.common}">本页演示验证码回显和验证码绕过；短信轰炸、验证码可控、跨场景复用等问题可作为后续扩展。</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.captcha.sms.vul1.title}|"> 漏洞场景：验证码回显</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="phone" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.phone}" placeholder="Phone Number" value="18888888888"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="code" style="width: 120px;" th:placeholder="#{logic.captcha.captcha}" placeholder="Captcha"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <button class="layui-btn layui-btn-sm"
+                                                        style="width: 80px; margin-left: 10px;"
+                                                        lay-filter="vul1-getSMS-button" lay-submit="">
+                                                        <span th:text="#{logic.captcha.getCode}">获取验证码</span>
+                                                </button>
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul1-sms-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.captcha.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.captcha.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.captcha.sms.vul1.tips}">问题点</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.captcha.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul1-sms-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.captcha.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul1SMS"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.captcha.sms.vul2.title}|"> 漏洞场景：验证码绕过</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="phone" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.captcha.phone}" placeholder="Phone Number" value="18888888888"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="code" style="width: 120px;" th:placeholder="#{logic.captcha.captcha}" placeholder="Captcha"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <button class="layui-btn layui-btn-sm"
+                                                        style="width: 80px; margin-left: 10px;"
+                                                        lay-filter="vul2-getSMS-button" lay-submit="">
+                                                    <span th:text="#{logic.captcha.getCode}">获取验证码</span>
+                                                </button>
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul2-sms-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.captcha.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.captcha.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.captcha.sms.vul2.tips}">问题点</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.captcha.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul2-sms-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.captcha.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul2SMS"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab,
+            common = layui.common,
+            form = layui.form,
+            upload = layui.upload;
+
+        common.formListenFun("vul1-sms-button", "", "/logic/captcha/sms/vul1", "vul1-sms-result", "post");
+        common.formListenFun("vul2-sms-button", "", "/logic/captcha/sms/vul2", "vul2-sms-result", "post");
+
+
+        form.on('submit(vul1-getSMS-button)', function (data) {
+            $.ajax({
+                type: 'GET',
+                url: '/logic/captcha/sms/code',
+                data: data.field,
+                success: function (response) {
+                    console.log(response)
+                    if (response.code === 0) {
+                        $("#vul1-sms-result").text(response.msg);
+                        layer.msg(/*[[#{logic.captcha.sms.sent}]]*/ '验证码已发送，请查收', {icon: 1, offset: '10px'});
+                    } else {
+                        $("#vul1-sms-result").text(response.msg);
+                    }
+                },
+                error: function () {
+                    layer.msg(/*[[#{logic.captcha.sms.sendFailed}]]*/ '验证码发送失败，请检查', {icon: 2, offset: '10px'});
+                    $("#vul1-sms-result").text(/*[[#{logic.captcha.requestFailed}]]*/ "请求失败，请重试！");
+                }
+            });
+            return false;
+        });
+
+        form.on('submit(vul2-getSMS-button)', function (data) {
+            $.ajax({
+                type: 'GET',
+                url: '/logic/captcha/sms/code2',
+                data: data.field,
+                success: function (response) {
+                    console.log(response)
+                    if (response.code === 0) {
+                        $("#vul2-sms-result").text(response.msg);
+                        layer.msg(/*[[#{logic.captcha.sms.sent}]]*/ '验证码已发送，请查收', {icon: 1, offset: '10px'});
+                    } else {
+                        $("#vul2-sms-result").text(response.msg);
+                    }
+                },
+                error: function () {
+                    layer.msg(/*[[#{logic.captcha.sms.sendFailed}]]*/ '验证码发送失败，请检查', {icon: 2, offset: '10px'});
+                    $("#vul2-sms-result").text(/*[[#{logic.captcha.requestFailed}]]*/ "请求失败，请重试！");
+                }
+            });
+            return false;
+        });
+
+        miniTab.listen();
+        layer.msg(/*[[#{logic.captcha.toast}]]*/ "其他漏洞-验证码安全");
+        var isEnglishCaptcha = /*[[${#locale.language == 'en'}]]*/ false;
+
+        var cmConfig = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejin',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        var cmConfigSafe = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejinsafe',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        CodeMirror(document.getElementById("vul1SMS"), Object.assign({}, cmConfig, {value: isEnglishCaptcha ? vul1SMS : vul1SMSZh}));
+        CodeMirror(document.getElementById("vul2SMS"), Object.assign({}, cmConfig, {value: isEnglishCaptcha ? vul2SMS : vul2SMSZh}));
+    })
+</script>
+
+</body>
+</html>

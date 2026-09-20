@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .ticket-content img { max-width: 100%; }
+    .ticket-content p { line-height: 1.8; }
+</style>
+<body>
+<div class="layui-fluid" th:if="${ticket != null}">
+    <div class="layui-card">
+        <div class="layui-card-header" th:text="${ticket.title}">工单</div>
+        <div class="layui-card-body">
+            <p>编号：<span th:text="${ticket.id}"></span> 状态：<span th:text="${ticket.status}"></span></p>
+            <p>提单人：<span th:text="${ticket.reporter}"></span> 处理人：<span th:text="${ticket.assignee}"></span></p>
+            <div class="ticket-content" th:utext="${ticket.content}"></div>
+            <form class="layui-form" method="get" th:action="@{/tickets/{id}/assign(id=${ticket.id})}">
+                <div class="layui-inline">
+                    <input class="layui-input" name="assignee" placeholder="转派给">
+                </div>
+                <button class="layui-btn" type="submit">转派</button>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">评论</div>
+        <div class="layui-card-body">
+            <div th:each="c : ${comments}" style="margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px;">
+                <b th:text="${c.username}"></b>
+                <div th:utext="${c.content}"></div>
+                <small th:text="${c.userAgent}"></small>
+            </div>
+            <p th:if="${error != null}" style="color:#ff5722;" th:text="${error}"></p>
+            <form method="post" th:action="@{/tickets/{id}/comments(id=${ticket.id})}">
+                <textarea class="layui-textarea" name="content" placeholder="跟进说明"></textarea>
+                <button class="layui-btn" style="margin-top:8px" type="submit">发表评论</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

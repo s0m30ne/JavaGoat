@@ -1,0 +1,99 @@
+{
+  "homeInfo": {
+    "title": "Workbench",
+    "href": "home"
+  },
+  "logoInfo": {
+    "title": "StackDesk",
+    "image": "images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "Service Desk",
+      "icon": "fa fa-dashboard",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "Tickets",
+          "href": "",
+          "icon": "fa fa-ticket",
+          "target": "_self",
+          "child": [
+            {"title": "My Tickets", "href": "tickets", "icon": "fa fa-list", "target": "_self"},
+            {"title": "All Tickets", "href": "tickets/all", "icon": "fa fa-th", "target": "_self"},
+            {"title": "New Ticket", "href": "tickets/new", "icon": "fa fa-plus", "target": "_self"}
+          ]
+        },
+        {
+          "title": "Knowledge Base",
+          "href": "",
+          "icon": "fa fa-book",
+          "target": "_self",
+          "child": [
+            {"title": "Articles", "href": "wiki", "icon": "fa fa-file-text", "target": "_self"},
+            {"title": "New Article", "href": "wiki/new", "icon": "fa fa-plus", "target": "_self"}
+          ]
+        },
+        {
+          "title": "Assets",
+          "href": "",
+          "icon": "fa fa-server",
+          "target": "_self",
+          "child": [
+            {"title": "Hosts", "href": "assets", "icon": "fa fa-desktop", "target": "_self"},
+            {"title": "Probe", "href": "assets/probe", "icon": "fa fa-heartbeat", "target": "_self"},
+            {"title": "Import", "href": "assets/import", "icon": "fa fa-upload", "target": "_self"}
+          ]
+        },
+        {
+          "title": "Reimbursement",
+          "href": "",
+          "icon": "fa fa-cny",
+          "target": "_self",
+          "child": [
+            {"title": "My Requests", "href": "reimbursements", "icon": "fa fa-list-alt", "target": "_self"},
+            {"title": "Approvals", "href": "reimbursements/inbox", "icon": "fa fa-check", "target": "_self"}
+          ]
+        },
+        {"title": "Messages", "href": "messages", "icon": "fa fa-bell", "target": "_self"},
+        {"title": "Directory", "href": "directory", "icon": "fa fa-address-book", "target": "_self"},
+        {"title": "Files", "href": "files", "icon": "fa fa-paperclip", "target": "_self"}
+      ]
+    },
+    {
+      "title": "Settings",
+      "icon": "fa fa-cogs",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "Personal",
+          "href": "",
+          "icon": "fa fa-user",
+          "target": "_self",
+          "child": [
+            {"title": "Profile", "href": "settings/profile", "icon": "fa fa-id-card", "target": "_self"},
+            {"title": "Password", "href": "settings/password", "icon": "fa fa-key", "target": "_self"}
+          ]
+        },
+        {
+          "title": "Administration",
+          "href": "",
+          "icon": "fa fa-shield",
+          "target": "_self",
+          "child": [
+            {"title": "Users", "href": "admin/users", "icon": "fa fa-users", "target": "_self"},
+            {"title": "Integrations", "href": "admin/integrations", "icon": "fa fa-plug", "target": "_self"},
+            {"title": "Config Import", "href": "admin/config", "icon": "fa fa-file-code-o", "target": "_self"},
+            {"title": "Notify Templates", "href": "admin/notify-templates", "icon": "fa fa-envelope-o", "target": "_self"},
+            {"title": "Reports", "href": "admin/reports", "icon": "fa fa-bar-chart", "target": "_self"},
+            {"title": "Sessions", "href": "admin/sessions", "icon": "fa fa-lock", "target": "_self"},
+            {"title": "Operations", "href": "admin/ops", "icon": "fa fa-heartbeat", "target": "_self"}
+          ]
+        }
+      ]
+    }
+  ]
+}

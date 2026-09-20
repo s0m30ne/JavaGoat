@@ -1,0 +1,78 @@
+package top.whgojp.security.handler;
+
+import cn.hutool.core.date.DateUtil;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+import top.whgojp.common.constant.SysConstant;
+import top.whgojp.common.enums.LoginError;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Data
+@Slf4j
+@Component
+public class CustomSimpleUrlAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+
+    private static final String DEFAULT_FAILURE_URL = SysConstant.LOGIN_URL;
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        setDefaultFailureUrl(determineFailureUrl(exception));
+        super.onAuthenticationFailure(request, response, exception);
+        log.info("当前异常："+exception.getMessage());
+
+        String loginIp = request.getRemoteHost();
+        String loginDate = DateUtil.now();
+
+        log.info("IP:{} 于 {} 尝试登录系统失败 失败原因:{}", loginIp, loginDate, exception.getMessage());
+
+        try {
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+    }
+    public void CustomOnAuthenticationFailure(Exception exception){
+
+    }
+    private String determineFailureUrl(AuthenticationException exception) {
+        String failureUrl = DEFAULT_FAILURE_URL;
+        Integer failureType = determineFailureType(exception).getType();
+
+        if (failureType != null) {
+            failureUrl += (failureUrl.lastIndexOf("?") > 0 ? "&" : "?") + "error=" + failureType;
+        }
+
+        return failureUrl;
+    }
+
+    private LoginError determineFailureType(AuthenticationException exception) {
+        if ("验证码为空".equals(exception.getMessage())){
+            return LoginError.CAPTCHANOTFOUND;
+        } else if ("验证码过期".equals(exception.getMessage())) {
+            return LoginError.CAPTCHAEXPIRED;
+        } else if ("验证码不正确".equals(exception.getMessage())) {
+            return LoginError.CAPTCHAERROR;
+        } else if (exception instanceof UsernameNotFoundException) {
+            return LoginError.USERNAMENOTFOUND;
+        } else if (exception instanceof LockedException) {
+            return LoginError.LOCKED;
+        } else if (exception instanceof AccountExpiredException) {
+            return LoginError.ACCOUNTEXPIRED;
+        } else if (exception instanceof BadCredentialsException) {
+            return LoginError.BADCREDENTIALS;
+        }
+
+        return LoginError.FAILURE;
+    }
+
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">集成 Webhook</div>
+        <div class="layui-card-body">
+            <form method="post" th:action="@{/admin/integrations/webhook/test}">
+                <input class="layui-input" name="url" placeholder="回调地址">
+                <button class="layui-btn" style="margin-top:8px">测试连接</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

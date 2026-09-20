@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .ops-page { max-width: 960px; margin: 0 auto; }
+    .hero, .block {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.04);
+    }
+    .hero { padding: 20px 24px; margin-bottom: 16px; }
+    .hero h2 { margin: 0 0 8px; font-size: 18px; font-weight: 600; text-wrap: balance; }
+    .hero p { margin: 0; color: #6b7280; line-height: 1.7; font-size: 13px; }
+    .banner {
+        margin-bottom: 16px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #edf8e8;
+        color: #2f7d32;
+        font-size: 13px;
+    }
+    .block { padding: 18px 20px 20px; margin-bottom: 16px; }
+    .block h3 { margin: 0 0 12px; font-size: 15px; font-weight: 600; }
+    .hint { color: #8b95a5; font-size: 12px; line-height: 1.6; margin: 0 0 12px; }
+    .tools {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    @media (max-width: 800px) { .tools { grid-template-columns: 1fr; } }
+    .tool {
+        display: block;
+        padding: 16px;
+        border-radius: 10px;
+        background: #f7f8fb;
+        color: inherit;
+        text-decoration: none;
+        outline: 1px solid rgba(15,23,42,.06);
+        transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), box-shadow 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+    .tool:hover { box-shadow: 0 8px 20px rgba(15,23,42,.08); }
+    .tool:active { transform: scale(0.98); }
+    .tool b { display: block; margin-bottom: 6px; font-size: 14px; }
+    .tool span { color: #6b7280; font-size: 12px; line-height: 1.5; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+</style>
+<body>
+<div class="layui-fluid ops-page">
+    <div class="hero">
+        <h2>运行与运维</h2>
+        <p>查看当前请求接入信息，并打开接口文档、运行指标和数据源监控。这些入口供排障和容量观察使用。</p>
+    </div>
+    <div class="banner" th:if="${trusted}">已识别为内网运维访问，完整监控入口已展开。</div>
+    <div class="block">
+        <h3>接入信息</h3>
+        <p class="hint">来自当前 HTTP 请求，便于核对反向代理是否正确传递客户端地址。</p>
+        <table class="layui-table">
+            <tbody>
+            <tr>
+                <td width="180">直连地址</td>
+                <td class="mono" th:text="${remote != null and !#strings.isEmpty(remote)} ? ${remote} : '—'">—</td>
+            </tr>
+            <tr>
+                <td>X-Forwarded-For</td>
+                <td class="mono" th:text="${xff != null and !#strings.isEmpty(xff)} ? ${xff} : '未传递'">未传递</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="block">
+        <h3>运维入口</h3>
+        <div class="tools">
+            <a class="tool" href="/v3/api-docs" target="_blank" rel="noopener">
+                <b>OpenAPI</b>
+                <span>服务台接口描述，供联调和网关登记使用。</span>
+            </a>
+            <a class="tool" href="/sys/actuator" target="_blank" rel="noopener">
+                <b>运行指标</b>
+                <span>健康检查、环境与度量，观察实例状态。</span>
+            </a>
+            <a class="tool" href="/druid" target="_blank" rel="noopener">
+                <b>SQL 监控</b>
+                <span>数据源连接池与慢 SQL，定位数据库压力。</span>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

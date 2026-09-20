@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .desk-form form { display: block; width: auto; }
+    .desk-form form input { margin-right: 0; }
+    .desk-form .layui-form-label { width: 110px; }
+    .desk-form .layui-input-block { margin-left: 140px; max-width: 720px; }
+    .hint { color: #666; line-height: 1.8; margin: 0 0 16px 140px; }
+    .hint code { background: #f6f6f6; padding: 0 4px; }
+    pre.sample { background: #f6f6f6; padding: 12px; margin: 0 0 16px 140px; max-width: 720px; overflow: auto; }
+</style>
+<body>
+<div class="layui-fluid desk-form">
+    <div class="layui-card">
+        <div class="layui-card-header">资产 XML 导入</div>
+        <div class="layui-card-body">
+            <p class="hint">从运维导出的库存文件批量写入主机台账，请上传 <code>.xml</code> 文件。</p>
+            <pre class="sample">&lt;hosts&gt;
+  &lt;host&gt;
+    &lt;hostname&gt;pc-01&lt;/hostname&gt;
+    &lt;ip&gt;10.0.0.21&lt;/ip&gt;
+    &lt;owner&gt;test&lt;/owner&gt;
+  &lt;/host&gt;
+&lt;/hosts&gt;</pre>
+            <form class="layui-form" method="post" enctype="multipart/form-data" th:action="@{/assets/import}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">XML 文件</label>
+                    <div class="layui-input-block">
+                        <input type="file" name="file" accept=".xml,text/xml,application/xml" required>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" type="submit">开始导入</button>
+                    </div>
+                </div>
+            </form>
+            <div class="layui-input-block" th:if="${error != null}" style="color:#ff5722;" th:text="${error}"></div>
+            <div class="layui-input-block" th:if="${saved != null}">
+                <p>已写入 <span th:text="${saved}"></span> 条主机记录。</p>
+                <pre th:text="${parsed}"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

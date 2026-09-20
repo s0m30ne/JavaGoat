@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<directory>
+    <user>
+        <name>admin</name>
+        <title>系统管理员</title>
+        <dept>信息技术部</dept>
+        <secret>admin-secret</secret>
+    </user>
+    <user>
+        <name>agent</name>
+        <title>IT处理人</title>
+        <dept>信息技术部</dept>
+        <secret>agent-secret</secret>
+    </user>
+    <user>
+        <name>test</name>
+        <title>业务员工</title>
+        <dept>业务部</dept>
+        <secret>test-secret</secret>
+    </user>
+</directory>

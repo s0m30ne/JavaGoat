@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">报销申请</div>
+        <div class="layui-card-body">
+            <form method="post" th:action="@{/reimbursements/create}">
+                <div class="layui-inline"><input class="layui-input" name="amount" placeholder="金额"></div>
+                <div class="layui-inline"><input class="layui-input" name="remark" placeholder="备注"></div>
+                <button class="layui-btn" type="submit">提交</button>
+            </form>
+            <table class="layui-table">
+                <thead><tr><th>ID</th><th>申请人</th><th>金额</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                <tr th:each="i : ${items}">
+                    <td th:text="${i.id}"></td>
+                    <td th:text="${i.applicant}"></td>
+                    <td th:text="${i.amount}"></td>
+                    <td th:text="${i.status}"></td>
+                    <td><a class="layui-btn layui-btn-xs" th:href="@{/reimbursements/{id}/pay(id=${i.id})}">支付</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

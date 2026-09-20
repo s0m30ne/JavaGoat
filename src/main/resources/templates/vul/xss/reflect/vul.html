@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/common::head}"></head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+	                    <a style="color: rgb(30 159 255)" class="xss-reflect" th:text="#{xss.reflect.title}">跨站脚本攻击 - 反射型XSS</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+	                        <pre th:text="#{xss.reflect.intro.vul}">  XSS(跨站脚本攻击)的本质是：不可信数据进入页面执行上下文后，被浏览器当作脚本或可执行HTML解析。</pre>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+	                        <h1><span class="iconfont icon-bug" th:text="| #{xss.reflect.vul.getPost}|"> 漏洞场景：GET型与POST型</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+	                                <li class="layui-this" th:text="#{xss.reflect.vul.get}">GET型</li>
+	                                <li th:text="#{xss.reflect.vul.post}">POST型</li>
+	                                <li th:text="#{xss.reflect.vul.string}">String</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <input type="text" name="payload" style="width: 300px;" required
+                                                   lay-verify="required" value="<script>alert(/xss/)</script>" autocomplete="off"
+                                                   class="layui-input" id="vul1-reflect-raw-get-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select" lay-filter="vul1-reflect-raw-get">
+	                                                    <option value="" th:text="#{xss.reflect.payload.example}">示例Payload</option>
+		                                                    <option th:value="#{xss.reflect.payload.value.tag}" th:text="#{xss.reflect.payload.tag}">探测漏洞标签</option>
+	                                                    <option th:value="#{xss.reflect.payload.value.hijack}">
+	                                                        [[#{xss.reflect.payload.hijack}]]
+                                                    </option>
+	                                                    <option th:value="#{xss.reflect.payload.value.steal}">
+	                                                        [[#{xss.reflect.payload.steal}]]
+                                                    </option>
+	                                                    <option th:value="#{xss.reflect.payload.value.deface}">
+	                                                        [[#{xss.reflect.payload.deface}]]
+                                                    </option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;" lay-filter="vul1-reflect-raw-get" lay-submit="">
+	                                                    <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <input type="text" name="payload" style="width: 300px;" required
+                                                   lay-verify="required" value="<script>alert(/xss/)</script>" autocomplete="off"
+                                                   class="layui-input">
+                                            <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;" lay-filter="vul1-reflect-raw-post" lay-submit="">
+	                                                <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                            </button>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+	                                        <p th:text="#{xss.reflect.vul.stringDesc}">Controller接口返回的数据是String类型</p>
+                                        <a target="_blank" href="/xss/reflect/vul2?payload=%3Cscript%3Ealert(/xss/)%3C/script%3E">
+                                            <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;">
+	                                                <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                            </button>
+                                        </a>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+	                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{common.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+	                                            <pre style="color: #28333e;font-size: 12px;" th:text="#{xss.reflect.vul.responseTips}">Java后端返回数据有以下几种形式。</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+	                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{common.testResult}">测试结果</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul1-reflect-raw-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+	                        <h1><span class="iconfont icon-code" th:text="| #{common.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul1ReflectRaw"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+	                        <h1><span class="iconfont icon-bug" th:text="| #{xss.reflect.vul.contentType}|"> 漏洞场景：Content-Type问题</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">text/plain</li>
+                                <li>text/html</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+	                                        <p th:text="#{xss.reflect.vul.textPlainDesc}">text/plain：浏览器在获取到这种文件时并不会对其进行处理，将文件设置为纯文本的形式</p>
+                                        <a target="_blank" href="/xss/reflect/vul3?type=plain&payload=123<script>alert(/xss/)</script>123">
+                                            <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;">
+	                                                <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                            </button>
+                                        </a>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+	                                        <p th:text="#{xss.reflect.vul.textHtmlDesc}">text/html：浏览器在获取到这种文件时会自动调用html的解析器对文件进行相应的处理</p>
+                                        <a target="_blank" href="/xss/reflect/vul3?type=html&payload=123<script>alert(/xss/)</script>123">
+                                            <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;">
+	                                                <span class="iconfont icon-zhihang" th:text="#{button.run}">Run</span>
+                                            </button>
+                                        </a>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+	                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{common.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+	                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{xss.reflect.vul.contentTypeTips}">Content-Type属性指定响应的HTTP内容类型。</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+	                        <h1><span class="iconfont icon-code" th:text="| #{common.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul2ReflectContentType"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:replace="~{common/common::script}"></script>
+	<script type="text/javascript" th:inline="javascript">
+    layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab,
+            common = layui.common,
+            form = layui.form;
+        miniTab.listen();
+	        layer.msg(/*[[#{xss.reflect.toast}]]*/ "跨站脚本-反射型");
+
+        common.formListenFun("vul1-reflect-raw-get", "", "/xss/reflect/vul1", "vul1-reflect-raw-result", "get");
+        common.formListenFun("vul1-reflect-raw-post", "", "/xss/reflect/vul1", "vul1-reflect-raw-result", "post");
+        common.selectListenFun("vul1-reflect-raw-get", "vul1-reflect-raw-get-input");
+
+	        var cmConfig = {
+	            lineNumbers: true,
+	            lineWrapping: true,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejin',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+	            mode: "text/x-java"
+	        };
+	        var isEnglishReflect = /*[[${#locale.language == 'en'}]]*/ false;
+	        var reflectVulCode = isEnglishReflect ? {
+	            vul1: "// Raw vulnerable scenario, no filtering. The controller returns a JSON-style result\n" +
+	                "public R vul1(String payload) {\n" +
+	                "    return R.ok(payload);\n" +
+	                "}\n" +
+	                "// R is a utility wrapper for unified API responses\n" +
+	                "// Response example:\n" +
+	                "// {\n" +
+	                "//     \"msg\": \"\u003Cscript>alert(document.cookie)\u003C/script>\",\n" +
+	                "//     \"code\": 0\n" +
+	                "// }\n" +
+	                "// A JSON response usually does not execute script by itself. XSS is triggered when the frontend writes the field into the page with unsafe sinks such as innerHTML\n" +
+	                "\n" +
+	                "// Raw vulnerable scenario, no filtering. The controller returns a String response\n" +
+	                "public String vul2(String payload) {\n" +
+	                "    return payload;\n" +
+	                "}",
+	            vul2: "// Built-in Tomcat HttpServletResponse. Content-Type controls how the browser parses the reflected payload\n" +
+	                "public void vul3(String type, String payload, HttpServletResponse response) {\n" +
+	                "    switch (type) {\n" +
+	                "        case \"html\":\n" +
+	                "            response.getWriter().print(payload);\n" +
+	                "            response.setContentType(\"text/html;charset=utf-8\");\n" +
+	                "            response.getWriter().flush();\n" +
+	                "            break;\n" +
+	                "        case \"plain\":\n" +
+	                "            response.getWriter().print(payload);\n" +
+	                "            response.setContentType(\"text/plain;charset=utf-8\");\n" +
+	                "            response.getWriter().flush();\n" +
+	                "            ...\n" +
+	                "    }\n" +
+	                "}"
+	        } : {
+	            vul1: vul1ReflectRaw,
+	            vul2: vul2ReflectContentType
+	        };
+
+	        CodeMirror(document.getElementById("vul1ReflectRaw"), Object.assign({}, cmConfig, {
+	            value: reflectVulCode.vul1
+	        }));
+	        CodeMirror(document.getElementById("vul2ReflectContentType"), Object.assign({}, cmConfig, {
+	            value: reflectVulCode.vul2
+	        }));
+
+        $('.xss-reflect').hover(function () {
+            $(this).css('cursor', 'pointer');
+	            layer.tips(/*[[#{xss.reflect.flowTip}]]*/ '攻击流程图', this, {
+                tips: [1, '#0051ff'],
+                time: 2000
+            });
+        });
+
+        $('.xss-reflect').on('click', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 1,
+                area: ['837px', '649.8px'], // 宽高缩小为0.9倍
+                shadeClose: true,
+                content: '<div style="text-align: center;"><img src="/static/images/vul/xss/reflect.png" style="width: 100%; height: 50%;"></div>'
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{common/common::head}"></div>
+</head>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <!-- XPath injection demo -->
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a class="dos" style="color: #1e9fff;" th:text="#{other.xpath.title}">Other Vulnerabilities - XPath Injection</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="background-color: #e0f7fa;">
+                        <p>
+                        <pre th:text="#{other.xpath.intro.core}">XPath is an expression language for querying XML documents.</pre>
+                        <pre th:text="#{other.xpath.intro.risk}">XPath injection occurs when user input is concatenated into an XPath expression.</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px;">
+                <div class="layui-row layui-col-space15">
+                    <!-- Vulnerable scenario -->
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{other.xpath.vul.title}|"> Vulnerable Scenario: Raw XPath Concatenation</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="username" style="width: 150px;" required
+                                                       lay-verify="required" value="admin" th:placeholder="#{other.xpath.username}" placeholder="Username"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="password" style="width: 150px" required
+                                                       lay-verify="required"
+                                                       value=" ' or '1'='1"
+                                                       th:placeholder="#{other.xpath.password}" placeholder="Password" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul-xpath-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.xpath.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.xpath.tips}"> Tips</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e; font-size: 15px;" th:text="#{other.xpath.vul.tips}">Similar to SQL injection, a tautology can make the predicate always true.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{other.xpath.testResult}"> Test Result</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul-xpath-result" style="color: red; font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{other.xpath.vulnerableCode}|"> Vulnerable Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vulXpath"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px;">
+                <div class="layui-row layui-col-space15">
+                    <!-- Safe scenario -->
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="| #{other.xpath.safe.title}|"> Safe Scenario: XPath Variable Binding</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="username" style="width: 150px;" required
+                                                       lay-verify="required" value="admin" th:placeholder="#{other.xpath.username}" placeholder="Username"
+                                                       autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="password" style="width: 150px" required
+                                                       lay-verify="required"
+                                                       value=" ' or '1'='1"
+                                                       th:placeholder="#{other.xpath.password}" placeholder="Password" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="safe-xpath-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.xpath.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.xpath.tips}"> Tips</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e; font-size: 15px;" th:text="#{other.xpath.safe.tips}">Do not concatenate user input into XPath expressions.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output-safe"></i><span th:text="#{other.xpath.testResult}"> Test Result</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="safe-xpath-result" style="color: red; font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{other.xpath.safeCode}|"> Safe Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeXpath"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form,
+                upload = layui.upload;
+
+            miniTab.listen();
+            layer.msg(/*[[#{other.xpath.toast}]]*/ "Other Vulnerabilities - XPath Injection");
+            var isEnglishXpath = /*[[${#locale.language == 'en'}]]*/ false;
+
+            common.formListenFun("vul-xpath-button", "", "/other/xpath/vul", "vul-xpath-result", "get");
+
+            common.formListenFun("safe-xpath-button", "", "/other/xpath/safe", "safe-xpath-result", "post");
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            var cmConfigSafe = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejinsafe',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("vulXpath"), Object.assign({}, cmConfig, {
+                value: isEnglishXpath ? vulXpath : vulXpathZh
+            }));
+            CodeMirror(document.getElementById("safeXpath"), Object.assign({}, cmConfigSafe, {
+                value: isEnglishXpath ? safeXpath : safeXpathZh
+            }));
+        });
+    });
+</script>
+
+</body>
+</html>

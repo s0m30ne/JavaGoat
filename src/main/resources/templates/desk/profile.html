@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .profile-page { max-width: 980px; margin: 0 auto; }
+    .profile-page form { display: block; width: auto; }
+    .profile-page form input { margin-right: 0; }
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 16px;
+        align-items: start;
+    }
+    @media (max-width: 768px) {
+        .profile-grid { grid-template-columns: 1fr; }
+    }
+    .profile-card, .form-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .04);
+        overflow: hidden;
+    }
+    .form-card { padding: 8px 8px 16px; }
+    .form-card .layui-card-header {
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 16px 20px 8px;
+    }
+    .avatar-panel {
+        padding: 28px 20px 20px;
+        text-align: center;
+    }
+    .avatar-ring {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: linear-gradient(180deg, #e8eef6, #d7dee8);
+        box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 8px 18px rgba(15,23,42,.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        color: #4b5563;
+        -webkit-font-smoothing: antialiased;
+    }
+    .avatar-ring img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        outline: 1px solid rgba(0,0,0,.1);
+        outline-offset: -1px;
+    }
+    .display-name {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        text-wrap: balance;
+    }
+    .account-line { color: #6b7280; font-size: 13px; margin: 4px 0 10px; }
+    .role-pill {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: #eef6ff;
+        color: #1e6fd9;
+        font-size: 12px;
+    }
+    .signature-preview {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #eef1f5;
+        color: #4b5563;
+        font-size: 13px;
+        line-height: 1.6;
+        text-align: left;
+    }
+    .signature-preview .label { color: #9aa3af; font-size: 12px; margin-bottom: 4px; }
+    .layui-form-label { width: 90px; }
+    .layui-input-block { margin-left: 120px; }
+    .layui-form-item { margin-bottom: 18px; }
+    .hint { color: #8b95a5; font-size: 12px; margin-top: 6px; line-height: 1.5; }
+    .save-bar { margin-top: 8px; }
+    .layui-btn { transition: transform 120ms cubic-bezier(0.2, 0, 0, 1); }
+    .layui-btn:active { transform: scale(0.96); }
+    .toast {
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+    }
+    .toast-ok { background: #edf8e8; color: #2f7d32; }
+    .toast-err { background: #fdecea; color: #c62828; }
+    .fetch-preview {
+        margin-top: 10px;
+        max-height: 120px;
+        overflow: auto;
+        background: #f6f7f9;
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 12px;
+        text-align: left;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+</style>
+<body>
+<div class="layui-fluid profile-page" th:if="${user != null}">
+    <div class="toast toast-ok" th:if="${saved}">资料已保存</div>
+    <div class="toast toast-ok" th:if="${avatarOk}">头像地址已更新</div>
+    <div class="toast toast-err" th:if="${avatarError}" th:text="${avatarError}"></div>
+    <div class="profile-grid">
+        <div class="profile-card">
+            <div class="avatar-panel">
+                <div class="avatar-ring">
+                    <img th:if="${user.avatarUrl != null and !#strings.isEmpty(user.avatarUrl)}"
+                         th:src="${user.avatarUrl}" alt="avatar">
+                    <span th:if="${user.avatarUrl == null or #strings.isEmpty(user.avatarUrl)}"
+                          th:text="${user.username != null and !#strings.isEmpty(user.username)} ? ${#strings.substring(user.username,0,1).toUpperCase()} : '?'"></span>
+                </div>
+                <h3 class="display-name" th:text="${user.displayName != null and !#strings.isEmpty(user.displayName)} ? ${user.displayName} : ${user.username}">用户</h3>
+                <div class="account-line">账号 <span th:text="${user.username}"></span></div>
+                <span class="role-pill" th:text="${user.role}">employee</span>
+                <div class="signature-preview">
+                    <div class="label">个性签名</div>
+                    <div th:utext="${user.signature != null and !#strings.isEmpty(user.signature)} ? ${user.signature} : '还没有填写签名'"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-card">
+            <div class="layui-card-header">基本资料</div>
+            <form class="layui-form" method="post" th:action="@{/settings/profile}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">显示名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="displayName" th:value="${user.displayName}" placeholder="同事看到的名称" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" th:value="${user.email}" placeholder="name@company.com" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="department" th:value="${user.department}" placeholder="所属部门" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">签名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="signature" th:value="${user.signature}" placeholder="一两句话介绍自己" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-form-item save-bar">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" type="submit">保存资料</button>
+                    </div>
+                </div>
+            </form>
+            <div class="layui-card-header">头像</div>
+            <form class="layui-form" method="post" th:action="@{/settings/profile/avatar-from-url}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="url" th:value="${user.avatarUrl}" placeholder="https:// 开头的图片 URL" class="layui-input" autocomplete="off">
+                        <div class="hint">从指定地址拉取头像，适用于内网图床或员工门户同步。</div>
+                        <pre class="fetch-preview" th:if="${avatarPreview}" th:text="${avatarPreview}"></pre>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" type="submit">拉取并更新</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

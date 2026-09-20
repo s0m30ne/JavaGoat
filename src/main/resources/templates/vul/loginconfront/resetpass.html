@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{login.bypass.reset.pageTitle}">Password Reset Step Bypass Scenario</title>
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.6.3/css/layui.css}" media="all">
+    <style>
+        .step-indicator {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .step-indicator div {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        .step-indicator div::before {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: #ccc;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        .step-indicator div:first-child::before {
+            display: none;
+        }
+        .step-indicator div span {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background: #ccc;
+            color: #fff;
+            border-radius: 50%;
+        }
+        .step-indicator div.active span {
+            background: #5FB878;
+        }
+        .step-indicator div.active + div::before {
+            background: #5FB878;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <div class="step-indicator">
+        <div class="active"><span>1</span><p th:text="#{login.bypass.reset.step1}">Verify Username</p></div>
+        <div><span>2</span><p th:text="#{login.bypass.reset.step2}">Verify Old Password</p></div>
+        <div><span>3</span><p th:text="#{login.bypass.reset.step3}">Enter New Password</p></div>
+    </div>
+
+    <form class="layui-form" id="reset-password-form">
+        <div class="step step-1">
+            <div class="layui-form-item">
+                <label class="layui-form-label" th:text="#{login.bypass.reset.username}">Username</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" th:placeholder="#{login.bypass.reset.usernamePlaceholder}" placeholder="Please enter username" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn layui-btn-normal" id="next1" th:text="#{login.bypass.reset.next}">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step step-2" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label" th:text="#{login.bypass.reset.oldPassword}">Old Password</label>
+                <div class="layui-input-block">
+                    <input type="text" name="old-password" th:placeholder="#{login.bypass.reset.oldPasswordPlaceholder}" placeholder="Please enter old password" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn layui-btn-primary" id="prev2" th:text="#{login.bypass.reset.previous}">Previous</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="next2" th:text="#{login.bypass.reset.next}">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step step-3" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label" th:text="#{login.bypass.reset.newPassword}">New Password</label>
+                <div class="layui-input-block">
+                    <input type="text" name="new-password" th:placeholder="#{login.bypass.reset.newPasswordPlaceholder}" placeholder="Please enter new password" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" th:text="#{login.bypass.reset.confirmPassword}">Confirm New Password</label>
+                <div class="layui-input-block">
+                    <input type="text" name="confirm-password" th:placeholder="#{login.bypass.reset.confirmPasswordPlaceholder}" placeholder="Enter new password again" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn layui-btn-primary" id="prev3" th:text="#{login.bypass.reset.previous}">Previous</button>
+                <button type="submit" class="layui-btn layui-btn-normal" th:text="#{login.bypass.reset.finish}">Finish</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script th:inline="javascript">
+    layui.use(['form'], function () {
+        const $ = layui.$;
+
+        let currentStep = 1;
+
+        function updateStepIndicator(step) {
+            $('.step-indicator div').removeClass('active');
+            $(`.step-indicator div:nth-child(${step})`).addClass('active');
+        }
+
+        function showStep(step) {
+            $('.step').hide();
+            $(`.step-${step}`).show();
+            updateStepIndicator(step);
+        }
+
+        $('#next1').on('click', function () {
+            const username = $('input[name="username"]').val();
+            if (!username) {
+                return layer.msg(/*[[#{login.bypass.reset.usernamePlaceholder}]]*/ 'Please enter username');
+            }
+
+            $.post('/loginconfront/bypass/step1', { username: username }, function (res) {
+                if (res.code === 0) {
+                    currentStep = 2;
+                    showStep(currentStep);
+                } else {
+                    layer.msg(res.msg || (/*[[#{login.bypass.reset.validationFailed}]]*/ 'Verification failed.'));
+                }
+            });
+        });
+
+        $('#next2').on('click', function () {
+            const oldPassword = $('input[name="old-password"]').val();
+            if (!oldPassword) {
+                return layer.msg(/*[[#{login.bypass.reset.oldPasswordPlaceholder}]]*/ 'Please enter old password');
+            }
+
+            $.post('/loginconfront/bypass/step2', { oldPassword: oldPassword }, function (res) {
+                if (res.code === 0) {
+                    currentStep = 3;
+                    showStep(currentStep);
+                } else {
+                    layer.msg(res.msg || (/*[[#{login.bypass.reset.oldValidationFailed}]]*/ 'Old password verification failed.'));
+                }
+            });
+        });
+
+        $('#reset-password-form').on('submit', function (e) {
+            e.preventDefault();
+
+            const newPassword = $('input[name="new-password"]').val();
+            const confirmPassword = $('input[name="confirm-password"]').val();
+            if (newPassword !== confirmPassword) {
+                return layer.msg(/*[[#{login.bypass.reset.passwordMismatch}]]*/ 'The two password entries do not match.');
+            }
+
+            $.post('/loginconfront/bypass/step3', { newPassword: newPassword }, function (res) {
+                if (res.code === 0) {
+                    layer.msg(/*[[#{login.bypass.result.resetSuccess}]]*/ 'Password reset succeeded.');
+                } else {
+                    layer.msg(res.msg || (/*[[#{login.bypass.reset.failed}]]*/ 'Password reset failed.'));
+                }
+            });
+        });
+
+        $('#prev2').on('click', function () {
+            currentStep = 1;
+            showStep(currentStep);
+        });
+
+        $('#prev3').on('click', function () {
+            currentStep = 2;
+            showStep(currentStep);
+        });
+    });
+</script>
+</body>
+</html>

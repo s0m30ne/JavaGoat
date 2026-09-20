@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">用户</div>
+        <div class="layui-card-body">
+            <table class="layui-table">
+                <thead><tr><th>ID</th><th>账号</th><th>角色</th><th>部门</th><th>邮箱</th></tr></thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id}"></td>
+                    <td th:text="${u.username}"></td>
+                    <td th:text="${u.role}"></td>
+                    <td th:text="${u.department}"></td>
+                    <td th:text="${u.email}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

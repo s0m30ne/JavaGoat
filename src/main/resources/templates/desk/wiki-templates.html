@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">通知模板预览</div>
+        <div class="layui-card-body">
+            <form method="get" th:action="@{/wiki/templates/preview}">
+                <input class="layui-input" name="name" value="wiki" placeholder="模板名">
+                <button class="layui-btn" style="margin-top:8px">预览</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

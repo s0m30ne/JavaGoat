@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend style="color: rgb(30 159 255)" th:text="#{other.xff.title}">Other Vulnerabilities - XFF (X-Forwarded-For) Forgery</legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                            <pre th:text="#{other.xff.intro}">XFF forgery: when the server trusts X-Forwarded-For without confirming the request came through a trusted proxy, attackers can forge the client IP.</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="|  #{other.xff.vul.title}|">  Vulnerable Scenario: Native XFF Trust</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" th:text="#{other.xff.tab.direct}">Direct Backend Access</li>
+                                <li th:text="#{other.xff.tab.separated}">Simulated Frontend/Backend Separation</li>
+
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" th:action="@{/other/xff/vul1}" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <p th:text="#{other.xff.direct.desc}">The client accesses the server directly without adding an XFF header.</p>
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.xff.visit}">Visit</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div>
+                                                <label class="layui-form-label" th:text="#{other.xff.forgeHeader}">Forge XFF Header</label>
+                                                <div class="layui-input-block">
+                                                    <input type="checkbox" name="xff" id="xff" lay-skin="switch"
+                                                           lay-text="ON|OFF">
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        id="submit">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.xff.visit}">Visit</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.xff.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{other.xff.vul.tips}">XFF tips</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{other.xff.vulnerableCode}|">  Vulnerable Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vulXffforgery">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="|  #{other.xff.safe.title}|">  Safe Scenario: Trusted Proxy Source Filtering</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" th:text="#{other.xff.tab.separated}">Simulated Frontend/Backend Separation</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div>
+                                                <label class="layui-form-label" th:text="#{other.xff.forgeHeader}">Forge XFF Header</label>
+                                                <div class="layui-input-block">
+                                                    <input type="checkbox" name="xff" id="safeXff" lay-skin="switch"
+                                                           lay-text="ON|OFF">
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        id="safeSubmit">
+                                                    <span class="iconfont icon-zhihang" th:text="#{other.xff.visit}">Visit</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{other.xff.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{other.xff.safe.tips}">Safe XFF tips</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{other.xff.safeCode}|">  Safe Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeXffforgery">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $("#submit").click(function (event) {
+            event.preventDefault(); // 防止表单提交
+            var xff = $("#xff").is(':checked');
+
+            $.ajax({
+                url: "/other/xff/vul2",
+                type: "get",
+                headers: {
+                    'X-Forwarded-For': "8.8.8.8",
+                },
+                data: {xff: xff},
+                success: function (result) {
+                    // window.location.href = "/other/xff/onlyForGoogle";
+                    document.write(result)
+                },
+                error: function () {
+                    if (layui.layer) {
+                        layui.layer.msg(/*[[#{other.xff.ajaxError}]]*/ "Request failed.", {icon: 2, offset: '10px'});
+                    } else {
+                        alert(/*[[#{other.xff.ajaxError}]]*/ "Request failed.");
+                    }
+                }
+            });
+        });
+
+        $("#safeSubmit").click(function (event) {
+            event.preventDefault(); // 防止表单提交
+            var xff = $("#safeXff").is(':checked');
+
+            $.ajax({
+                url: "/other/xff/safe", // 修正Thymeleaf表达式问题
+                type: "get",
+                headers: {
+                    'X-Forwarded-For': "8.8.8.8",
+                },
+                data: {xff: xff},
+                success: function (result) {
+                    // window.location.href = "/other/xff/onlyForGoogle";
+                    document.write(result)
+                },
+                error: function () {
+                    if (layui.layer) {
+                        layui.layer.msg(/*[[#{other.xff.ajaxError}]]*/ "Request failed.", {icon: 2, offset: '10px'});
+                    } else {
+                        alert(/*[[#{other.xff.ajaxError}]]*/ "Request failed.");
+                    }
+                }
+            });
+        });
+
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form;
+            miniTab.listen();
+            layer.msg(/*[[#{other.xff.toast}]]*/ "Other Vulnerabilities - XFF Forgery");
+            var isEnglishXff = /*[[${#locale.language == 'en'}]]*/ false;
+
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+            var cmConfigSafe = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejinsafe',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("vulXffforgery"), Object.assign({}, cmConfig, {
+                value: isEnglishXff ? vulXffforgery : vulXffforgeryZh
+            }));
+            CodeMirror(document.getElementById("safeXffforgery"), Object.assign({}, cmConfigSafe, {
+                value: isEnglishXff ? safeXffforgery : safeXffforgeryZh
+            }));
+
+        });
+    });
+</script>
+
+</body>
+</html>

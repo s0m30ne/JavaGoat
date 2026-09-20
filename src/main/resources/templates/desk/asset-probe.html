@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">主机探活</div>
+        <div class="layui-card-body">
+            <form class="layui-form" onsubmit="return false;">
+                <input class="layui-input" id="ip" placeholder="IP 或主机名" style="max-width:320px;display:inline-block;">
+                <button class="layui-btn" id="probe">检测</button>
+            </form>
+            <pre id="out" style="margin-top:16px;background:#f6f6f6;padding:12px;"></pre>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}"></script>
+<script>
+    $('#probe').on('click', function () {
+        $.post('/assets/probe', {ip: $('#ip').val()}, function (res) {
+            $('#out').text(res.msg || JSON.stringify(res));
+        });
+    });
+</script>
+</body>
+</html>

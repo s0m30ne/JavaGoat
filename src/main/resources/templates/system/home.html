@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">工作台</div>
+                <div class="layui-card-body">
+                    <h2>欢迎使用 StackDesk 云栈服务台</h2>
+                    <p>处理工单、查看资产、维护知识库、提交报销。请从左侧菜单进入对应模块。</p>
+                    <p>默认账号：员工 test/test，处理人 agent/agent，管理员 admin/admin。</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">工单</div>
+                <div class="layui-card-body">
+                    <a class="layui-btn layui-btn-normal" href="javascript:;" layuimini-content-href="tickets">我的工单</a>
+                    <a class="layui-btn" href="javascript:;" layuimini-content-href="tickets/new">新建</a>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">资产</div>
+                <div class="layui-card-body">
+                    <a class="layui-btn layui-btn-normal" href="javascript:;" layuimini-content-href="assets">主机台账</a>
+                    <a class="layui-btn" href="javascript:;" layuimini-content-href="assets/probe">探活</a>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">知识库</div>
+                <div class="layui-card-body">
+                    <a class="layui-btn layui-btn-normal" href="javascript:;" layuimini-content-href="wiki">文章</a>
+                    <a class="layui-btn" href="javascript:;" layuimini-content-href="messages">消息</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.6.3/layui.js}" charset="utf-8"></script>
+</body>
+</html>

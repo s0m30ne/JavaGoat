@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0.33
+    container_name: Container-MYSQL8
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: QWE123qwe
+      MYSQL_DATABASE: JavaSecLab
+    volumes:
+      - ./sql/JavaSecLab.sql:/docker-entrypoint-initdb.d/JavaSecLab.sql
+    networks:
+      - JavaGoatNet
+
+  JavaGoat:
+    image: whgojp/javagoat:1.5
+    container_name: Container-JavaGoat
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - TZ=Asia/Shanghai
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql
+    volumes:
+      - ./logs:/logs
+    networks:
+      - JavaGoatNet
+
+networks:
+  JavaGoatNet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24

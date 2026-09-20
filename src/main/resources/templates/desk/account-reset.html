@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">找回密码</div>
+        <div class="layui-card-body">
+            <form method="post" th:action="@{/account/reset/step1}">
+                <input class="layui-input" name="username" placeholder="用户名">
+                <button class="layui-btn" style="margin-top:8px">下一步</button>
+            </form>
+            <form method="post" th:action="@{/account/reset/step3}" style="margin-top:16px">
+                <input class="layui-input" name="newPassword" placeholder="新密码">
+                <button class="layui-btn" style="margin-top:8px">直接更新</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

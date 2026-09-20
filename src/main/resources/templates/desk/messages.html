@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .chat-page { max-width: 860px; margin: 0 auto; }
+    .chat-shell {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 48px);
+        min-height: 480px;
+        background: #f3f5f8;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e6e9ef;
+    }
+    .chat-header {
+        height: 52px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-bottom: 1px solid #e6e9ef;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    .chat-header small { color: #888; font-weight: 400; margin-left: 8px; }
+    .chat-stream {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 16px 8px;
+    }
+    .bubble {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 14px;
+        max-width: 78%;
+    }
+    .bubble.theirs { margin-right: auto; }
+    .bubble.mine { margin-left: auto; flex-direction: row-reverse; }
+    .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #cfd6e4;
+        color: #334;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+    .bubble.mine .avatar { background: #1e9fff; color: #fff; }
+    .bubble-body { margin: 0 10px; max-width: calc(100% - 46px); }
+    .meta { font-size: 12px; color: #999; margin-bottom: 4px; }
+    .bubble.mine .meta { text-align: right; }
+    .text {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 6px;
+        line-height: 1.6;
+        word-break: break-word;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .bubble.mine .text { background: #95ec69; }
+    .text img { max-width: 100%; }
+    .chat-composer {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        padding: 10px 12px 12px;
+        background: #fff;
+        border-top: 1px solid #e6e9ef;
+    }
+    .chat-composer textarea {
+        flex: 1;
+        min-height: 44px;
+        max-height: 120px;
+        resize: none;
+        border: 1px solid #dcdfe6;
+        border-radius: 6px;
+        padding: 8px 10px;
+        font-size: 14px;
+        line-height: 1.5;
+        outline: none;
+    }
+    .chat-composer textarea:focus { border-color: #1e9fff; }
+    .chat-composer button {
+        height: 40px;
+        padding: 0 18px;
+        border: none;
+        border-radius: 6px;
+        background: #1e9fff;
+        color: #fff;
+        cursor: pointer;
+    }
+    .chat-empty { text-align: center; color: #999; margin-top: 48px; }
+</style>
+<body>
+<div class="layui-fluid chat-page">
+    <div class="chat-shell">
+        <div class="chat-header">
+            服务台会话
+            <small>IT 支持群</small>
+        </div>
+        <div class="chat-stream" id="chatStream">
+            <div class="chat-empty" th:if="${messages == null or #lists.isEmpty(messages)}">暂无消息，在下方输入框发送第一条。</div>
+            <div th:each="m : ${messages}"
+                 th:class="${m.username == currentUser} ? 'bubble mine' : 'bubble theirs'">
+                <div class="avatar" th:text="${m.username != null and !#strings.isEmpty(m.username)} ? ${#strings.substring(m.username,0,1)} : '?'"></div>
+                <div class="bubble-body">
+                    <div class="meta">
+                        <span th:text="${m.username}"></span>
+                        <span th:if="${m.createdAt != null}" th:text="${#dates.format(m.createdAt, 'HH:mm')}"></span>
+                    </div>
+                    <div class="text" th:utext="${m.content}"></div>
+                </div>
+            </div>
+        </div>
+        <p th:if="${error != null}" style="color:#ff5722;padding:0 12px;margin:0;" th:text="${error}"></p>
+        <form class="chat-composer" method="post" th:action="@{/messages/send}">
+            <textarea id="chatInput" name="content" placeholder="输入消息，Enter 发送，Shift+Enter 换行" required></textarea>
+            <button type="submit">发送</button>
+        </form>
+    </div>
+</div>
+<script>
+    var stream = document.getElementById('chatStream');
+    if (stream) {
+        stream.scrollTop = stream.scrollHeight;
+    }
+    var input = document.getElementById('chatInput');
+    if (input) {
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    }
+</script>
+</body>
+</html>

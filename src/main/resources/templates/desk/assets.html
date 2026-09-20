@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">主机台账</div>
+        <div class="layui-card-body">
+            <form class="layui-form" method="get" th:action="@{/assets}">
+                <div class="layui-inline"><input class="layui-input" name="owner" th:value="${owner}" placeholder="负责人"></div>
+                <div class="layui-inline"><input class="layui-input" name="orderBy" th:value="${orderBy}" placeholder="排序字段"></div>
+                <button class="layui-btn" type="submit">筛选</button>
+            </form>
+            <table class="layui-table">
+                <thead><tr><th>ID</th><th>主机</th><th>IP</th><th>负责人</th></tr></thead>
+                <tbody>
+                <tr th:each="a : ${assets}">
+                    <td th:text="${a.id}"></td>
+                    <td th:text="${a.hostname}"></td>
+                    <td th:text="${a.ip}"></td>
+                    <td th:text="${a.owner}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

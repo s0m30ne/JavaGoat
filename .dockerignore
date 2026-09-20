@@ -1,0 +1,8 @@
+.git
+.idea
+*.iml
+target
+logs
+pic
+docs/audit-map.md
+**/.DS_Store

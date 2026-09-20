@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" class="csrf" th:text="#{csrf.title}">其他漏洞 - 跨站请求伪造</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                        <pre th:text="#{csrf.intro.core}">  CSRF(跨站请求伪造)：攻击者诱导已登录用户访问恶意页面或触发恶意请求，浏览器会自动携带目标站点 Cookie 等凭证，导致服务端误以为请求来自用户本人，从而执行转账、改密、绑定账号等敏感操作。</pre>
+                        <pre th:text="#{csrf.intro.conditions}">  触发条件：目标操作依赖 Cookie/Session 自动认证，且缺少不可预测的 CSRF Token、Origin/Referer 校验、SameSite Cookie 或二次确认等防护。GET 请求执行状态变更会显著放大风险。</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="|  #{csrf.vul.native}|">  漏洞场景：原生漏洞场景</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" th:text="#{csrf.transferOperation}">转账操作</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;" th:action="@{/csrf/vul}" target="_blank">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="receiver" style="width: 150px;" required
+                                                       lay-verify="required" value="zhangsan" placeholder="收款人" th:placeholder="#{csrf.receiver}" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="amount" style="width: 150px" required
+                                                       lay-verify="required" value="100" placeholder="转账金额" th:placeholder="#{csrf.amount}" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul-csrf" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{csrf.transfer}">转账</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{csrf.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{csrf.vulTips}">问题点</pre>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{csrf.vulnerableCode}|">  缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vulCsrf">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="|  #{csrf.safe.token}|">  安全场景：CSRF Token防护</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" th:text="#{csrf.transferOperation}">转账操作</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;" th:action="@{/csrf/safe1}" target="_blank">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="hidden" name="csrfToken" th:value="${csrfToken}"/>
+                                                <input type="text" name="receiver" style="width: 150px;" required
+                                                       lay-verify="required" value="zhangsan" placeholder="收款人" th:placeholder="#{csrf.receiver}" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="amount" style="width: 150px" required
+                                                       lay-verify="required" value="100" placeholder="转账金额" th:placeholder="#{csrf.amount}" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul-csrf" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{csrf.transfer}">转账</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{csrf.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{csrf.tokenTips}">安全编码建议</pre>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{csrf.safeCode}|">  安全代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeCsrfToken">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="|  #{csrf.safe.originReferer}|">  辅助场景：Origin/Referer检测</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" th:text="#{csrf.transferOperation}">转账操作</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;" th:action="@{/csrf/safe2}" target="_blank">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="receiver" style="width: 150px;" required
+                                                       lay-verify="required" value="zhangsan" placeholder="收款人" th:placeholder="#{csrf.receiver}" autocomplete="off"
+                                                       class="layui-input">
+                                                <input type="text" name="amount" style="width: 150px" required
+                                                       lay-verify="required" value="100" placeholder="转账金额" th:placeholder="#{csrf.amount}" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul-csrf" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{csrf.transfer}">转账</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{csrf.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{csrf.originRefererTips}">辅助检测说明</pre>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{csrf.auxiliaryCode}|">  辅助代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeCsrfReferer">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script th:inline="javascript">
+    $(function() {
+        $.ajax({
+            url: '/csrf/getCsrfToken',
+            type: 'GET',
+            success: function(data) {
+                $('input[name="csrfToken"]').val(data.csrfToken);
+            },
+            error: function() {
+                console.error(/*[[#{csrf.fetchTokenFailed}]]*/ '获取csrfToken失败');
+            }
+        });
+    });
+</script>
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form;
+            miniTab.listen();
+            layer.msg(/*[[#{csrf.toast}]]*/ "其他漏洞-跨站请求伪造")
+            var isEnglishCsrf = /*[[${#locale.language == 'en'}]]*/ false;
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+            var cmConfigSafe = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejinsafe',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("vulCsrf"), Object.assign({}, cmConfig, {
+                value: isEnglishCsrf ? vulCsrf : vulCsrfZh
+            }));
+            CodeMirror(document.getElementById("safeCsrfToken"), Object.assign({}, cmConfigSafe, {
+                value: isEnglishCsrf ? safeCsrfToken : safeCsrfTokenZh
+            }));
+            CodeMirror(document.getElementById("safeCsrfReferer"), Object.assign({}, cmConfigSafe, {
+                value: isEnglishCsrf ? safeCsrfReferer : safeCsrfRefererZh
+            }));
+
+            $('.csrf').hover(function () {
+                $(this).css('cursor', 'pointer');
+                layer.tips(/*[[#{csrf.flowTip}]]*/ '攻击流程图', this, {
+                    tips: [1, '#0051ff'],
+                    time: 2000
+                });
+            });
+
+            $('.csrf').on('click', function () {
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 1,
+                    area: ['930px', '513px'],
+                    shadeClose: true,
+                    content: '<div style="text-align: center;"><img src="/static/images/vul/csrf/csrf.png" style="width: 100%; height: 100%;"></div>'
+                });
+            });
+
+        });
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/common::head}"></head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" class="ssrf" th:text="#{rce.title}">RCE - 远程代码执行</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <pre th:text="#{rce.intro.core}">RCE(Remote Code Execution)：攻击者让服务端执行非预期的系统命令或代码逻辑。常见类型包括命令注入(Command Injection)和代码注入(Code Injection)。</pre>
+                        <pre th:text="#{rce.code.intro}">代码注入通常发生在业务把不可信输入交给脚本引擎、表达式引擎、模板引擎或动态编译执行。风险不只来自“执行命令”，读取文件、访问网络、反射调用和修改业务数据同样危险。</pre>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="| #{rce.code.groovy.title}|"> 漏洞场景：Groovy代码注入</span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/rce/code_injection.pcapng" download="code_injection.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{rce.trafficAnalysis}">流量分析</a>
+                            </span>
+                        </h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <input type="text" name="payload" style="width: 300px;" required
+                                                   lay-verify="required" value='"whoami".execute()' autocomplete="off"
+                                                   class="layui-input" id="vul-groovy-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select" lay-filter="vul-groovy-select">
+                                                    <option value="" th:text="#{rce.samplePayload}">示例Payload</option>
+                                                    <option value="'open -a Calculator'.execute()" th:text="#{rce.calcMac}">弹计算器-mac</option>
+                                                    <option value="'calc'.execute()" th:text="#{rce.calcWin}">弹计算器-win</option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul-groovy-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{rce.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{rce.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{rce.code.groovy.tips}">问题点</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{rce.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul-groovy-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{rce.vulnerableCode}">缺陷代码</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vulGroovy"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="| #{rce.code.safe.title}|"> 安全场景：受控动作分发</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <input type="text" name="payload" style="width: 300px;" required
+                                                   lay-verify="required" value="hello" autocomplete="off"
+                                                   class="layui-input" id="safe-groovy-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select" lay-filter="safe-groovy-select">
+                                                    <option value="" th:text="#{rce.samplePayload}">示例Payload</option>
+                                                    <option value="hello" th:text="#{rce.code.helloAction}">问候动作</option>
+                                                    <option value="time" th:text="#{rce.command.currentTime}">当前时间</option>
+                                                    <option value="sum" th:text="#{rce.code.sumAction}">求和动作</option>
+                                                    <option value='"whoami".execute()' th:text="#{rce.code.illegalScript}">非法脚本示例</option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="safe-groovy-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{rce.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{rce.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{rce.code.safe.tips}">安全编码建议</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output-safe"></i><span th:text="#{rce.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="safe-groovy-result"
+                                                 style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{rce.safeCode}|"> 安全代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="safeGroovy"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab,
+            common = layui.common,
+            form = layui.form;
+        miniTab.listen();
+        layer.msg(/*[[#{rce.toast}]]*/ "RCE - 远程代码执行");
+        var isEnglishRce = /*[[${#locale.language == 'en'}]]*/ false;
+
+        common.formListenFun("vul-groovy-button", "", "/code/vulGroovy", "vul-groovy-result", "get");
+        common.selectListenFun("vul-groovy-select", "vul-groovy-input");
+
+        common.formListenFun("safe-groovy-button", "", "/code/safeGroovy", "safe-groovy-result", "get");
+        common.selectListenFun("safe-groovy-select", "safe-groovy-input");
+
+
+
+        var cmConfig = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejin',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        var cmConfigSafe = {
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: true,
+            theme: 'juejinsafe',
+            styleActiveLine: {nonEmpty: true},
+            fontSize: "18px",
+            mode: "text/x-java"
+        };
+
+        CodeMirror(document.getElementById("vulGroovy"), Object.assign({}, cmConfig, {
+            value: isEnglishRce ? vulGroovy : vulGroovyZh
+        }));
+        CodeMirror(document.getElementById("safeGroovy"), Object.assign({}, cmConfigSafe, {
+            value: isEnglishRce ? safeGroovy : safeGroovyZh
+        }));
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+{
+  "homeInfo": {
+    "title": "工作台",
+    "href": "home"
+  },
+  "logoInfo": {
+    "title": "StackDesk",
+    "image": "images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "服务台",
+      "icon": "fa fa-dashboard",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "工单中心",
+          "href": "",
+          "icon": "fa fa-ticket",
+          "target": "_self",
+          "child": [
+            {"title": "我的工单", "href": "tickets", "icon": "fa fa-list", "target": "_self"},
+            {"title": "全部工单", "href": "tickets/all", "icon": "fa fa-th", "target": "_self"},
+            {"title": "新建工单", "href": "tickets/new", "icon": "fa fa-plus", "target": "_self"}
+          ]
+        },
+        {
+          "title": "知识库",
+          "href": "",
+          "icon": "fa fa-book",
+          "target": "_self",
+          "child": [
+            {"title": "文章", "href": "wiki", "icon": "fa fa-file-text", "target": "_self"},
+            {"title": "新建文章", "href": "wiki/new", "icon": "fa fa-plus", "target": "_self"}
+          ]
+        },
+        {
+          "title": "资产管理",
+          "href": "",
+          "icon": "fa fa-server",
+          "target": "_self",
+          "child": [
+            {"title": "主机台账", "href": "assets", "icon": "fa fa-desktop", "target": "_self"},
+            {"title": "探活", "href": "assets/probe", "icon": "fa fa-heartbeat", "target": "_self"},
+            {"title": "导入", "href": "assets/import", "icon": "fa fa-upload", "target": "_self"}
+          ]
+        },
+        {
+          "title": "报销与额度",
+          "href": "",
+          "icon": "fa fa-cny",
+          "target": "_self",
+          "child": [
+            {"title": "我的申请", "href": "reimbursements", "icon": "fa fa-list-alt", "target": "_self"},
+            {"title": "审批", "href": "reimbursements/inbox", "icon": "fa fa-check", "target": "_self"}
+          ]
+        },
+        {"title": "消息中心", "href": "messages", "icon": "fa fa-bell", "target": "_self"},
+        {"title": "通讯录", "href": "directory", "icon": "fa fa-address-book", "target": "_self"},
+        {"title": "附件", "href": "files", "icon": "fa fa-paperclip", "target": "_self"}
+      ]
+    },
+    {
+      "title": "个人与系统",
+      "icon": "fa fa-cogs",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "个人设置",
+          "href": "",
+          "icon": "fa fa-user",
+          "target": "_self",
+          "child": [
+            {"title": "资料与头像", "href": "settings/profile", "icon": "fa fa-id-card", "target": "_self"},
+            {"title": "修改密码", "href": "settings/password", "icon": "fa fa-key", "target": "_self"}
+          ]
+        },
+        {
+          "title": "系统管理",
+          "href": "",
+          "icon": "fa fa-shield",
+          "target": "_self",
+          "child": [
+            {"title": "用户", "href": "admin/users", "icon": "fa fa-users", "target": "_self"},
+            {"title": "集成", "href": "admin/integrations", "icon": "fa fa-plug", "target": "_self"},
+            {"title": "配置导入", "href": "admin/config", "icon": "fa fa-file-code-o", "target": "_self"},
+            {"title": "通知模板", "href": "admin/notify-templates", "icon": "fa fa-envelope-o", "target": "_self"},
+            {"title": "报表", "href": "admin/reports", "icon": "fa fa-bar-chart", "target": "_self"},
+            {"title": "会话与登录", "href": "admin/sessions", "icon": "fa fa-lock", "target": "_self"},
+            {"title": "运维", "href": "admin/ops", "icon": "fa fa-heartbeat", "target": "_self"}
+          ]
+        }
+      ]
+    }
+  ]
+}

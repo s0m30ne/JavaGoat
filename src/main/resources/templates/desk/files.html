@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">附件</div>
+        <div class="layui-card-body">
+            <form method="post" enctype="multipart/form-data" th:action="@{/files/upload}">
+                <input type="file" name="file">
+                <button class="layui-btn">上传</button>
+            </form>
+            <form method="get" th:action="@{/files/read}" style="margin-top:12px">
+                <input class="layui-input" name="fileName" placeholder="读取路径" style="max-width:360px;display:inline-block;">
+                <button class="layui-btn">读取</button>
+            </form>
+            <form method="get" th:action="@{/files/download}" style="margin-top:12px">
+                <input class="layui-input" name="fileName" placeholder="下载路径" style="max-width:360px;display:inline-block;">
+                <button class="layui-btn">下载</button>
+            </form>
+            <form method="get" th:action="@{/files/delete}" style="margin-top:12px">
+                <input class="layui-input" name="fileName" placeholder="删除路径" style="max-width:360px;display:inline-block;">
+                <button class="layui-btn layui-btn-danger">删除</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

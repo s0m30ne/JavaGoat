@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title site-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" th:text="#{logic.pay.title}">逻辑漏洞 - 支付漏洞</a>
+                    </legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="background-color: #a7deefab;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <pre th:text="#{logic.pay.intro.core}">支付系统中的逻辑漏洞可能导致严重的经济损失。常见的支付漏洞包括：支付金额篡改、订单重放攻击、竞态条件、支付流程绕过、整数溢出和浮点数精度问题等。</pre>
+                                <pre th:text="#{logic.pay.intro.balance}">这些漏洞可能使攻击者以低于正常价格购买商品，重复使用同一订单，或完全绕过支付流程。此场景中余额为1000元，点击右侧按钮可进行余额重置。</pre>
+                            </div>
+                            <button class="layui-btn layui-btn-normal" id="resetBalanceBtn">
+                                <i class="layui-icon layui-icon-refresh"></i> <span th:text="#{logic.pay.resetBalance}">重置余额</span>
+                            </button>
+                        </div>
+                    </blockquote>
+                </fieldset>
+            </div>
+
+            <!-- 漏洞场景1：支付金额参数篡改 -->
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.pay.vul1.title}|"> 漏洞场景：支付金额参数篡改</span></h1>
+
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.productCount}">商品数量</span>:&nbsp;
+                                                <input type="text" name="count" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.productCount}" placeholder="Quantity" value="1"
+                                                       autocomplete="off" class="layui-input">
+                                                <span th:text="#{logic.pay.productPrice}">商品单价</span>:&nbsp;
+                                                <input type="text" name="price" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.productPrice}" placeholder="Unit Price" value="0.01"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul1-pay-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.pay}">支付</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.pay.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.pay.vul1.tips}">支付金额参数篡改</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.pay.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul1-pay-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.pay.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul1Pay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 漏洞场景2：订单重放攻击 -->
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.pay.vul2.title}|"> 漏洞场景：订单重放攻击</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.orderId}">订单ID</span>:&nbsp;<input type="text" name="orderId" style="width: 120px;"
+                                                                    required
+                                                                    lay-verify="required" th:placeholder="#{logic.pay.orderId}" placeholder="Order ID"
+                                                                    value="order123"
+                                                                    autocomplete="off" class="layui-input">
+                                                <span th:text="#{logic.pay.orderAmount}">订单金额</span>:&nbsp;<input type="text" name="amount" style="width: 120px;"
+                                                                      required
+                                                                      lay-verify="required" th:placeholder="#{logic.pay.orderAmount}" placeholder="Order Amount"
+                                                                      value="100.00"
+                                                                      autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul2-pay-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.pay}">支付</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.pay.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.pay.vul2.tips}">订单重放攻击</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.pay.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul2-pay-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.pay.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul2Pay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 漏洞场景3：竞态条件漏洞 -->
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.pay.vul3.title}|"> 漏洞场景：竞态条件漏洞</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.orderId}">订单ID</span>:&nbsp;<input type="text" name="orderId" style="width: 120px;"
+                                                                    required
+                                                                    lay-verify="required" th:placeholder="#{logic.pay.orderId}" placeholder="Order ID"
+                                                                    value="race123"
+                                                                    autocomplete="off" class="layui-input">
+                                                <span th:text="#{logic.pay.paymentAmount}">支付金额</span>:&nbsp;<input type="text" name="amount" style="width: 120px;"
+                                                                      required
+                                                                      lay-verify="required" th:placeholder="#{logic.pay.paymentAmount}" placeholder="Payment Amount"
+                                                                      value="100.00"
+                                                                      autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul3-pay-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.concurrent}">并发</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.pay.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.pay.vul3.tips}">竞态条件</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.pay.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul3-pay-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.pay.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul3Pay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 漏洞场景4：支付流程绕过 -->
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.pay.vul4.title}|"> 漏洞场景：支付流程绕过</span></h1>
+
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.orderId}">订单ID</span>:&nbsp;<input type="text" name="orderId" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.orderId}" placeholder="Order ID" value="bypass123"
+                                                       autocomplete="off" class="layui-input">
+                                                <input type="text" name="amount" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.paymentAmount}" placeholder="Payment Amount" value="200.00"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul4-create-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.createOrder}">创建订单</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                            <span th:text="#{logic.pay.orderId}">订单ID</span>:&nbsp;<input type="text" name="orderId" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.orderId}" placeholder="Order ID" value="bypass123"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul4-status-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.queryStatus}">查询状态</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.orderId}">订单ID</span>:&nbsp;<input type="text" name="orderId" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.orderId}" placeholder="Order ID" value="bypass123"
+                                                       autocomplete="off" class="layui-input">
+                                                <input type="checkbox" name="success" th:title="#{logic.pay.paymentSuccess}" title="Payment Successful" checked>
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul4-notify-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.paymentNotify}">支付通知</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.pay.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.pay.vul4.tips}">支付流程绕过</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.pay.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul4-pay-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.pay.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul4Pay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 漏洞场景5：整数溢出漏洞 -->
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.pay.vul5.title}|"> 漏洞场景：整数溢出漏洞</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.productCount}">商品数量</span>:&nbsp;<input type="text" name="count" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.productCount}" placeholder="Quantity" value="2147483647"
+                                                       autocomplete="off" class="layui-input">
+                                                <span th:text="#{logic.pay.productPrice}">商品单价</span>:&nbsp;<input type="text" name="price" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.productPrice}" placeholder="Unit Price" value="10"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul5-pay-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.pay}">支付</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.pay.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.pay.vul5.tips}">整数溢出漏洞</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.pay.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul5-pay-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.pay.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul5Pay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 漏洞场景6：浮点数精度漏洞 -->
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-bug" th:text="| #{logic.pay.vul6.title}|"> 漏洞场景：浮点数精度漏洞</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <span th:text="#{logic.pay.productCount}">商品数量</span>:&nbsp;<input type="text" name="count" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.productCount}" placeholder="Quantity" value="0.1"
+                                                       autocomplete="off" class="layui-input">
+                                                <span th:text="#{logic.pay.productPrice}">商品单价</span>:&nbsp;<input type="text" name="price" style="width: 120px;" required
+                                                       lay-verify="required" th:placeholder="#{logic.pay.productPrice}" placeholder="Unit Price" value="0.2"
+                                                       autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        lay-filter="vul6-pay-button" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{logic.pay.pay}">支付</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{logic.pay.tips}">tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{logic.pay.vul6.tips}">浮点数精度漏洞</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{logic.pay.testResult}">测试结果</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul6-pay-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="| #{logic.pay.vulnerableCode}|"> 缺陷代码</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="vul6Pay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common,
+                form = layui.form;
+
+            miniTab.listen();
+            layer.msg(/*[[#{logic.pay.toast}]]*/ "逻辑漏洞 - 支付漏洞");
+            var isEnglishPay = /*[[${#locale.language == 'en'}]]*/ false;
+
+            // 漏洞场景1：支付金额参数篡改
+            common.formListenFun("vul1-pay-button", "", "/logic/pay/vul1", "vul1-pay-result", "post");
+
+
+            // 漏洞场景2：订单重放攻击
+            common.formListenFun("vul2-pay-button", "", "/logic/pay/vul2", "vul2-pay-result", "post");
+
+
+            // 漏洞场景3：竞态条件漏洞
+            form.on('submit(vul3-pay-button)', function (data) {
+                // 清空结果区域
+                $("#vul3-pay-result").html("");
+                
+                // 显示加载提示
+                var loadingMsg = layer.msg(/*[[#{logic.pay.loading}]]*/ '正在发送并发请求...', {icon: 16, time: 0});
+                
+                // 设置请求次数
+                var requestCount = 3;
+                var completedCount = 0;
+                
+                // 模拟并发请求
+                for (var i = 0; i < requestCount; i++) {
+                    var requestData = Object.assign({}, data.field, {_t: new Date().getTime() + i});
+                    
+                    $.ajax({
+                        url: '/logic/pay/vul3',
+                        type: 'post',
+                        data: requestData,
+                        success: function(res) {
+                            $("#vul3-pay-result").append("<p>" + (/*[[#{logic.pay.request}]]*/ "请求") + " #" + (++completedCount) + " " + (/*[[#{logic.pay.result}]]*/ "结果") + ": " +
+                                (res.code === 0 ? (/*[[#{logic.pay.success}]]*/ "成功") + " - " + res.msg : (/*[[#{logic.pay.failure}]]*/ "失败") + " - " + res.msg) + "</p>");
+                            
+                            if (completedCount >= requestCount) {
+                                layer.close(loadingMsg);
+                            }
+                        },
+                        error: function() {
+                            $("#vul3-pay-result").append("<p>" + (/*[[#{logic.pay.request}]]*/ "请求") + " #" + (++completedCount) + " " + (/*[[#{logic.pay.result}]]*/ "结果") + ": " + (/*[[#{logic.pay.requestFailed}]]*/ "请求失败") + "</p>");
+                            if (completedCount >= requestCount) {
+                                layer.close(loadingMsg);
+                            }
+                        }
+                    });
+                }
+                
+                return false;
+            });
+
+            // 漏洞场景4：支付流程绕过
+            common.formListenFun("vul4-create-button", "", "/logic/pay/vul4/create", "vul4-pay-result", "post");
+            common.formListenFun("vul4-status-button", "", "/logic/pay/vul4/status", "vul4-pay-result", "post");
+            common.formListenFun("vul4-notify-button", "", "/logic/pay/vul4/notify", "vul4-pay-result", "post");
+
+            // 漏洞场景5：整数溢出漏洞
+            common.formListenFun("vul5-pay-button", "", "/logic/pay/vul5", "vul5-pay-result", "post");
+
+            // 漏洞场景6：浮点数精度漏洞
+            common.formListenFun("vul6-pay-button", "", "/logic/pay/vul6", "vul6-pay-result", "post");
+
+            // 重置余额按钮
+            $("#resetBalanceBtn").click(function() {
+                $.ajax({
+                    url: '/logic/pay/resetBalance',
+                    type: 'POST',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            layer.msg(/*[[#{logic.pay.resetSuccess}]]*/ '余额已重置为1000.00元', {icon: 1});
+                        } else {
+                            layer.msg(res.msg, {icon: 2});
+                        }
+                    },
+                    error: function() {
+                        layer.msg(/*[[#{logic.pay.resetFailed}]]*/ '重置余额失败', {icon: 2});
+                    }
+                });
+                return false;
+            });
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+
+            // 渲染代码到编辑器
+            CodeMirror(document.getElementById("vul1Pay"), Object.assign({}, cmConfig, {
+                value: isEnglishPay ? vul1Pay : vul1PayZh
+            }));
+
+            CodeMirror(document.getElementById("vul2Pay"), Object.assign({}, cmConfig, {
+                value: isEnglishPay ? vul2Pay : vul2PayZh
+            }));
+
+            CodeMirror(document.getElementById("vul3Pay"), Object.assign({}, cmConfig, {
+                value: isEnglishPay ? vul3Pay : vul3PayZh
+            }));
+
+            CodeMirror(document.getElementById("vul4Pay"), Object.assign({}, cmConfig, {
+                value: isEnglishPay ? vul4Pay : vul4PayZh
+            }));
+
+            CodeMirror(document.getElementById("vul5Pay"), Object.assign({}, cmConfig, {
+                value: isEnglishPay ? vul5Pay : vul5PayZh
+            }));
+
+            CodeMirror(document.getElementById("vul6Pay"), Object.assign({}, cmConfig, {
+                value: isEnglishPay ? vul6Pay : vul6PayZh
+            }));
+
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

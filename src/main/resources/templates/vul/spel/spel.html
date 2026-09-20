@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend style="color: rgb(30 159 255)" th:text="#{spel.title}">SPEL - Expression Injection</legend>
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                        <pre th:text="#{spel.intro.core}">SpEL is Spring expression language.</pre>
+                        <pre th:text="#{spel.intro.safe}">Avoid parsing untrusted expressions.</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="|  #{spel.vul.title}|">  Vulnerable Scenario: Raw SpEL Evaluation</span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/spel/spel.pcapng" download="spel.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{spel.traffic}">Traffic Analysis</a>
+                            </span>
+                        </h1>
+
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <input type="text" name="ex" style="width: 300px;" required
+                                                   lay-verify="required" value="100-1" th:placeholder="#{spel.placeholder}" placeholder="SpEL expression" autocomplete="off"
+                                                   class="layui-input" id="vul-raw-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select" lay-filter="vul-raw-select">
+                                                    <option value="" th:text="#{spel.payload}">Sample Payload</option>
+                                                    <option value="100-1" th:text="#{spel.payload.arithmetic}">Arithmetic Probe</option>
+                                                    <option value="T(java.lang.Math).abs(-1)" th:text="#{spel.payload.type}">Type Reference Probe</option>
+                                                    <option value="T(java.lang.Runtime).getRuntime().exec(&#x27;true&#x27;)" th:text="#{spel.payload.command}">Command Execution - Safe Test</option>
+                                                    <option value="T(java.lang.Runtime).getRuntime().exec(&#x27;open -a Calculator&#x27;)" th:text="#{spel.payload.calcMac}">Open Calculator - macOS</option>
+                                                    <option value='T(java.lang.Runtime).getRuntime().exec(&#x27;calc.exe&#x27;)' th:text="#{spel.payload.calcWin}">Open Calculator - Windows</option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;" lay-filter="vul-raw" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{spel.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{spel.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{spel.vul.tips}">Typical audit chain is untrusted input to SpEL parser to Expression.getValue().</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{spel.testResult}">Test Result</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul-raw-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{spel.vulnerableCode}">Vulnerable Code</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="spelVul">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-anquan" th:text="| #{spel.safe.title}|"> Safe Scenario: Restrict Expression Capabilities with SimpleEvaluationContext</span></h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <input type="text" name="ex" style="width: 300px;" required
+                                                   lay-verify="required" value="100-1" th:placeholder="#{spel.placeholder}" placeholder="SpEL expression" autocomplete="off"
+                                                   class="layui-input" id="safe-raw-input">
+                                            <div style="display: flex; align-items: center;">
+                                                <select class="layui-form-select" lay-filter="safe-raw-select">
+                                                    <option value="" th:text="#{spel.payload}">Sample Payload</option>
+                                                    <option value="100-1" th:text="#{spel.payload.arithmetic}">Arithmetic Probe</option>
+                                                    <option value="T(java.lang.Math).abs(-1)" th:text="#{spel.payload.type}">Type Reference Probe</option>
+                                                    <option value="T(java.lang.Runtime).getRuntime().exec(&#x27;true&#x27;)" th:text="#{spel.payload.command}">Command Execution - Safe Test</option>
+                                                    <option value="T(java.lang.Runtime).getRuntime().exec(&#x27;open -a Calculator&#x27;)" th:text="#{spel.payload.calcMac}">Open Calculator - macOS</option>
+                                                    <option value='T(java.lang.Runtime).getRuntime().exec(&#x27;calc.exe&#x27;)' th:text="#{spel.payload.calcWin}">Open Calculator - Windows</option>
+                                                </select>
+                                                <button class="layui-btn layui-btn-normal" style="width: 100px; margin-left: 10px;" lay-filter="safe-raw" lay-submit="">
+                                                    <span class="iconfont icon-zhihang" th:text="#{spel.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{spel.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{spel.safe.tips}">SimpleEvaluationContext restricts high-risk SpEL capabilities.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output-safe"></i><span th:text="#{spel.testResult}">Test Result</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="safe-raw-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1><span class="iconfont icon-code" th:text="|  #{spel.safeCode}|">  Safe Code</span></h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="spelSafe">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                miniTab = layui.miniTab,
+                common = layui.common;
+            miniTab.listen();
+            layer.msg(/*[[#{spel.toast}]]*/ "SPEL - Expression Injection")
+            var isEnglishSpel = /*[[${#locale.language == 'en'}]]*/ false;
+
+            common.formListenFun("vul-raw", "", "/spel/vul", "vul-raw-result", "get");
+            common.selectListenFun("vul-raw-select", "vul-raw-input");
+
+            common.formListenFun("safe-raw", "", "/spel/safe", "safe-raw-result", "get");
+            common.selectListenFun("safe-raw-select", "safe-raw-input");
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            var cmConfigSafe = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejinsafe',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("spelVul"), Object.assign({}, cmConfig, {
+                value: isEnglishSpel ? spelVul : spelVulZh
+            }));
+            CodeMirror(document.getElementById("spelSafe"), Object.assign({}, cmConfigSafe, {
+                value: isEnglishSpel ? spelSafe : spelSafeZh
+            }));
+
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

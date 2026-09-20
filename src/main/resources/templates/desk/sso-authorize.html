@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .sso-wrap { max-width: 420px; margin: 48px auto; }
+    .sso-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06);
+        padding: 28px 28px 24px;
+    }
+    .sso-card h2 { margin: 0 0 8px; font-size: 20px; }
+    .sso-card p { color: #6b7280; font-size: 13px; line-height: 1.7; }
+    .sso-card form { display: block; width: auto; }
+    .sso-card .layui-input { margin: 0 0 12px; }
+    .err { color: #c62828; font-size: 13px; margin-bottom: 12px; }
+    .meta { font-size: 12px; color: #9aa3af; word-break: break-all; margin: 12px 0; }
+</style>
+<body>
+<div class="sso-wrap">
+    <div class="sso-card">
+        <h2>企业门户授权</h2>
+        <p>StackDesk 请求访问你的门户账号，授权后将返回服务台并保持登录状态。</p>
+        <p class="err" th:if="${param.error}">账号或密码不正确，或回调地址未通过校验。</p>
+        <div class="meta">应用：<span th:text="${clientId}">stackdesk</span><br>返回地址：<span th:text="${redirectUri}"></span></div>
+        <form method="post" th:action="@{/sso/authorize}">
+            <input type="hidden" name="redirect_uri" th:value="${redirectUri}">
+            <input type="hidden" name="state" th:value="${state}">
+            <input type="hidden" name="client_id" th:value="${clientId}">
+            <input class="layui-input" name="username" placeholder="门户账号" required autocomplete="username">
+            <input class="layui-input" name="password" type="password" placeholder="密码" required autocomplete="current-password">
+            <button class="layui-btn layui-btn-normal" style="width:100%;margin-top:8px" type="submit">同意并登录</button>
+        </form>
+        <p style="margin-top:16px;font-size:12px;"><a th:href="@{/login}">返回账号密码登录</a></p>
+    </div>
+</div>
+</body>
+</html>

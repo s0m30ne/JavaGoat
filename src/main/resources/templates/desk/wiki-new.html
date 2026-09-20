@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+<style>
+    .desk-form form { display: block; width: auto; }
+    .desk-form form input { margin-right: 0; }
+    .desk-form .layui-form-label { width: 110px; }
+    .desk-form .layui-input-block { margin-left: 140px; max-width: 860px; }
+    .desk-form .layui-form-label.required:after { content: '*'; color: #ff5722; margin-left: 4px; }
+    .edui-default { z-index: 1 !important; }
+</style>
+<body>
+<div class="layui-fluid desk-form">
+    <div class="layui-card">
+        <div class="layui-card-header">新建知识库文章</div>
+        <div class="layui-card-body">
+            <p th:if="${error != null}" style="color:#ff5722;margin:0 0 12px 140px;" th:text="${error}"></p>
+            <form class="layui-form" method="post" th:action="@{/wiki/create}" onsubmit="return syncWikiEditor();">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">文章标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" lay-verify="required" placeholder="请输入文章标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label required">正文</label>
+                    <div class="layui-input-block">
+                        <textarea id="body" name="body" style="display:none;"></textarea>
+                        <script id="wikiEditor" type="text/plain" style="width:100%;height:420px;"></script>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" lay-submit>发布文章</button>
+                        <a class="layui-btn layui-btn-primary" href="javascript:;" layuimini-content-href="wiki">返回列表</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/lib/layui-v2.6.3/layui.js}"></script>
+<script>window.UEDITOR_HOME_URL = '/lib/ueditor/';</script>
+<script type="text/javascript" charset="utf-8" src="/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function (action) {
+        if (action === 'uploadimage' || action === 'uploadfile' || action === 'uploadscrawl') {
+            return '/ueditor/upload';
+        }
+        return this._bkGetActionUrl.call(this, action);
+    };
+    var wikiEditor = UE.getEditor('wikiEditor', {
+        initialFrameWidth: '100%',
+        initialFrameHeight: 420,
+        autoHeightEnabled: false
+    });
+    function syncWikiEditor() {
+        document.getElementById('body').value = wikiEditor.getContent();
+        return true;
+    }
+    layui.use(['form'], function () {
+        layui.form.render();
+    });
+</script>
+</body>
+</html>

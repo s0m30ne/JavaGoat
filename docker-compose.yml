@@ -1,0 +1,50 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:8.0.33
+    container_name: Container-MYSQL8
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: QWE123qwe
+      MYSQL_DATABASE: JavaSecLab
+    volumes:
+      - ./sql/JavaSecLab.sql:/docker-entrypoint-initdb.d/JavaSecLab.sql
+    networks:
+      - JavaGoatNet
+
+  JavaGoat:
+    image: javagoat:1.5
+    container_name: Container-JavaGoat
+    restart: always
+    build: .
+    ports:
+      - 80:80
+    environment:
+      - TZ=Asia/Shanghai  # 设置时区上海（GMT+8）
+    depends_on:
+      - mysql
+    volumes:
+      - ./logs:/logs      # 记录日志信息
+
+    networks:
+      - JavaGoatNet
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - 9000:9000
+      - 18001:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - JavaGoatNet
+networks:
+  JavaGoatNet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24

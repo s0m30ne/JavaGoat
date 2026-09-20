@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{login.title}">StackDesk 登录</title>
+    <link rel="stylesheet" href="/static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/lib/custom-icon/iconfont.css">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="/static/lib/particles/assert/css/style.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: #fff;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* 根据需要调整高度 */
+            overflow: hidden; /* 防止绝对定位元素溢出 */
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中，如果需要的话 */
+
+        }
+
+        .admin-login-container {
+            width: 100%;
+            max-width: 900px; /* 添加最大宽度以避免在大屏幕上过宽 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* 改为 space-between，使左右两个容器分别位于两侧 */
+            /*padding: 0 20px; !* 添加左右内边距以避免挨边显示 *!*/
+            box-shadow: 0 0 15px rgba(6, 17, 47, 0.7); /* 调整阴影效果 */
+            position: relative;
+            z-index: 2; /* 保证内容在粒子背景之上 */
+        }
+
+        .admin-login-background-left,
+        .admin-login-background-right {
+            width: 48%; /* 使用百分比设置宽度，避免在不同屏幕尺寸下布局失调 */
+            height: 460px;
+            padding: 20px;
+            box-shadow: none; /* 去掉阴影效果 */
+            z-index: 99999;
+        }
+
+        .admin-login-background-left {
+            background: #409eff;
+        }
+
+        .admin-login-background-right {
+            background: rgb(255, 255, 255);
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #303133;
+            font-weight: bold;
+            font-size: 22px
+        }
+
+        .layui-form-div {
+            width: 288px;
+            margin: 0 auto;
+            padding-top: 10px;
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        .item {
+            width: 288px;
+            height: 35px;
+            border-bottom: 1px solid #dae1e6;
+            margin-bottom: 35px;
+        }
+
+        .item input {
+            display: inline-block;
+            width: 227px;
+            height: 28px;
+            padding: 0;
+            position: absolute;
+            border: 0;
+            outline: 0;
+            font-size: 16px;
+            letter-spacing: 0;
+        }
+
+        #captcha {
+            position: absolute;
+            left: 195px;
+        }
+
+        .checkbox {
+            font-weight: 400;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input[type=checkbox] {
+            float: left;
+            /*display: block !important; */
+            margin-top: 5px;
+        }
+
+        #current-time {
+            width: 100%;
+            color: white;
+            opacity: 0.9;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .quote {
+            color: white;
+            font-size: 16px;
+            margin-top: 35px;
+        }
+
+        #quote-question {
+            font-size: 20px;
+        }
+
+        #quote-answer {
+            margin-top: 15px;
+        }
+
+        .about-me {
+            width: 410px;
+            position: absolute; /* 子div设置为绝对定位 */
+            bottom: 0; /* 从下向上设置，这样它便会靠近底部 */
+            margin-bottom: 15px;
+            color: #000000;
+            font-size: 13px;
+        }
+
+        .about-author {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .iconfont-title {
+            font-family: "iconfont" !important;
+            font-size: 22px;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+
+<body class="container">
+<div id="particles-js"></div>
+<div style="position: fixed; top: 18px; right: 24px; z-index: 3;">
+    <a th:href="@{?lang=zh_CN}" th:text="#{language.zh}" style="color: #fff;margin-right: 12px;">中文</a>
+    <a th:href="@{?lang=en_US}" th:text="#{language.en}" style="color: #fff;">English</a>
+</div>
+<div class="admin-login-container">
+
+    <div class="admin-login-background-left">
+        <div id="current-time"></div>
+        <div class="quote">
+            <div id="quote-question"></div>
+            <pre><div id="quote-answer"></div></pre>
+        </div>
+        <div class="about-me">
+            <div style="font-weight: bold;margin-bottom: 5px" th:text="#{login.techStack}">技术栈： SpringBoot+SpringSecurity+MyBatis+Thymeleaf+Layui</div>
+            <pre><div id="description" style="margin-bottom: 5px" th:text="#{login.description}">  JavaSecLab是一款综合型Java漏洞平台，提供相关缺陷代码、修复代码、审计SINK点、安全编码规范、漏洞流量分析，覆盖多种漏洞场景，友好用户交互UI……</div></pre>
+            <p class="about-author"><a href="https://github.com/whgojp/JavaSecLab" target="_blank"><span class="iconfont icon-github" style="font-size: 25px"></span></a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="https://blog.csdn.net/weixin_53009585" target="_blank"><span class="iconfont icon-csdn48" style="font-size: 25px"></span></a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="iconfont icon-wechat-fill"
+                      style="font-size: 25px" id="get-wechat"></span>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="admin-login-background-right"
+         th:with="exp=${#request.session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION')}">
+        <h1 class="admin-header">
+            <span class="iconfont-title icon-anonymity-101" style="font-size: 30px"> StackDesk</span>
+        </h1>
+
+        <div class="col-sm-12 mx-auto text-center">
+            <p th:if="${errorMessage}" th:text="${errorMessage}" style="text-align: center;color: red;font-size: 18px">
+                登录失败</p>
+        </div>
+
+
+        <form class="layui-form-div" th:action="@{/loginProcess}" method="post">
+            <input type="hidden" name="redirect" th:value="${param.redirect}">
+            <div class="item">
+                <span class="iconfont icon-icon_username" style="font-size: 25px"></span>
+                <input type="text" name="username" required th:placeholder="#{login.username}" placeholder="请输入用户名">
+            </div>
+            <div class="item">
+                <span class="iconfont icon-mima1" style="font-size: 20px"></span>
+                <input style="padding-left: 5px" type="password" name="password" required th:placeholder="#{login.password}" placeholder="请输入密码">
+            </div>
+
+            <div class="item">
+            <span class="iconfont icon-yanzhengyanzhengma" style="font-size: 20px">
+
+            <input type="text" name="captcha" th:placeholder="#{login.captcha}" placeholder="请输入验证码" autocomplete="off"
+                   style="padding-left: 5px">
+        <img id="captcha" class="admin-captcha" width="90" height="30" th:src="@{/captcha}"
+             onclick="this.src='/captcha?' + Math.random()">
+            </span>
+
+            </div>
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me">&nbsp;&nbsp;<span th:text="#{login.remember}">记住密码</span>
+                </label>
+            </div>
+
+            <div style="text-align: center">
+
+                <button class="layui-btn layui-btn-normal layui-btn-lg"
+                        style="border-radius: .3rem;width: 100%; font-size: 20px " type="submit" th:text="#{login.submit}">登录
+                </button>
+            </div>
+
+        </form>
+        <p style="text-align:center;margin-top:16px;">
+            <a th:href="@{/sso/authorize(client_id='stackdesk',redirect_uri='/sso/callback',response_type='code')}">使用企业门户单点登录</a>
+        </p>
+
+
+    </div>
+</div>
+
+<script src="/static/js/formatTime.js"></script>
+<script src="/static/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+<script src="/static/lib/particles/particles.js"></script>
+<script src="/static/lib/particles/assert/js/app.js"></script>
+<script src="/static/lib/particles/assert/js/lib/stats.js"></script>
+<script src="/static/lib/layui-v2.6.3/layui.js"></script>
+<script th:inline="javascript">
+    const loginLocale = /*[[${#locale.toLanguageTag()}]]*/ 'zh-CN';
+    const quarterNames = [
+        /*[[#{login.time.quarter1}]]*/ '第一季度',
+        /*[[#{login.time.quarter2}]]*/ '第二季度',
+        /*[[#{login.time.quarter3}]]*/ '第三季度',
+        /*[[#{login.time.quarter4}]]*/ '第四季度'
+    ];
+    const loginTips = [
+        {
+            question: /*[[#{login.tip.iso.question}]]*/ '什么是ISO27000?',
+            answer: /*[[#{login.tip.iso.answer}]]*/ 'ISO 27000系列标准，即信息安全管理体系标准，是由国际标准化组织（ISO）发布的一套聚焦信息安全的管理标准。'
+        },
+        {
+            question: /*[[#{login.tip.owasp.question}]]*/ 'OWASP Top 10是什么?',
+            answer: /*[[#{login.tip.owasp.answer}]]*/ 'OWASP Top 10总结了Web应用中常见且高风险的安全问题，可作为安全培训、审计和修复优先级参考。'
+        },
+        {
+            question: /*[[#{login.tip.secure.question}]]*/ '安全编码的核心是什么?',
+            answer: /*[[#{login.tip.secure.answer}]]*/ '安全编码强调输入验证、输出编码、最小权限、鉴权校验、依赖治理和安全日志，让漏洞在编码阶段尽早被发现和修复。'
+        }
+    ];
+
+    function formatLoginTime(date) {
+        const dateTime = new Intl.DateTimeFormat(loginLocale, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            weekday: 'long',
+            hour12: false
+        }).format(date);
+        const quarter = Math.floor(date.getMonth() / 3);
+        return `${dateTime} ${quarterNames[quarter]}`;
+    }
+
+    let current_time = formatLoginTime(new Date());
+    const curTimeEl = document.getElementById("current-time");
+    curTimeEl.innerHTML = current_time;
+    setInterval(() => {
+        current_time = formatLoginTime(new Date());
+        curTimeEl.innerHTML = current_time;
+    }, 1000);
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    const quotation = loginTips[getRandomInt(0, loginTips.length)];
+    document.getElementById("quote-question").innerHTML = quotation.question;
+    document.getElementById("quote-answer").innerHTML = quotation.answer;
+
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+
+        $('#get-wechat').hover(function () {
+            layer.tips(/*[[#{login.wechatTip}]]*/ '交个朋友～', '#get-wechat', {
+                tips: [1, '#3fa807'],
+                time: 2000
+            });
+        });
+
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+
+            $('.icon-wechat-fill').on('click', function () {
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 1,
+                    area: ['300px', '400px'],
+                    shadeClose: true,
+                    content: '<div style="text-align: center;"><img src="/static/images/wechat.png" style="width: 100%; height: 100%;"></div>'
+                });
+            });
+
+        });
+    });
+
+</script>
+</body>
+
+</html>

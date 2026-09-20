@@ -1,0 +1,81 @@
+# Nginx -> Tomcat 9 (WAR / ROOT) -> MySQL
+# Usage:
+#   docker compose -f docker-compose.nginx-tomcat.yml -p javagoat-stack up -d --build
+# Stop the original jar/portainer stack first if port 80 or 3306 is already in use.
+
+services:
+  mysql:
+    image: mysql:8.0.33
+    container_name: javagoat-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: QWE123qwe
+      MYSQL_DATABASE: JavaSecLab
+      TZ: Asia/Shanghai
+    volumes:
+      - ./sql/JavaSecLab.sql:/docker-entrypoint-initdb.d/JavaSecLab.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pQWE123qwe"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - JavaGoatNet
+
+  tomcat:
+    build:
+      context: .
+      dockerfile: deploy/tomcat/Dockerfile
+    image: javagoat-tomcat:1.5
+    container_name: javagoat-tomcat
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+      - ./logs/tomcat:/usr/local/tomcat/logs
+      - upload-data:/tmp/upload
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    networks:
+      - JavaGoatNet
+    # Direct Tomcat access is intentionally not published.
+    # Uncomment the following to compare nginx vs origin (XFF / Host / CORS):
+    # ports:
+    #   - "8080:8080"
+
+  nginx:
+    image: nginx:1.26-alpine
+    container_name: javagoat-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      tomcat:
+        condition: service_healthy
+    networks:
+      - JavaGoatNet
+
+volumes:
+  upload-data:
+
+networks:
+  JavaGoatNet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.10.0/24

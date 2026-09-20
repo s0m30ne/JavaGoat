@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common::head}"></div>
+
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <a style="color: rgb(30 159 255)" class="jdbc" th:text="#{springboot.title}">SpringBoot Framework - Related Vulnerabilities</a>
+                    </legend>
+
+                    <blockquote class="layui-elem-quote layui-quote-nm"
+                                style="font-size: 15px;background-color: #a7deefab;box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important">
+                        <p>
+                        <pre th:text="#{springboot.intro}">Spring Boot exposure surfaces can leak APIs, configuration, runtime state, SQL monitoring data, and deserialization chains.</pre>
+                        </p>
+                    </blockquote>
+                </fieldset>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="| #{springboot.swagger.title}|"> Vulnerable Scenario: Swagger UI Sensitive API Leakage</span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/springboot/swagger_ui.pcapng" download="swagger_ui.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{springboot.traffic}">Traffic Analysis</a>
+                            </span>
+                        </h1>
+
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{springboot.openLink}">Open link:</p>
+                                            <a style="color: red" target="_blank" href="/v3/api-docs" th:text="#{springboot.swagger.link}">Swagger API</a>
+
+                                        </div>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{springboot.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{springboot.swagger.tips}">Swagger/OpenAPI documentation exposes API paths, parameters, data structures, and debugging entry points.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{springboot.vulnerableCode}">Vulnerable Code</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="springBootSwagger">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="| #{springboot.actuator.title}|"> SpringBoot Actuator Sensitive Endpoint Leakage</span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/springboot/actuator.pcapng" download="actuator.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{springboot.traffic}">Traffic Analysis</a>
+                            </span>
+                        </h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{springboot.openLink}">Open link:</p>
+                                            <a style="color: red" target="_blank" href="/sys/actuator" th:text="#{springboot.actuator.link}">Actuator Endpoints</a>
+
+                                        </div>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{springboot.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{springboot.actuator.tips}">Actuator endpoints can leak configuration, dependencies, routes, memory, and thread information.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{springboot.vulnerableCode}">Vulnerable Code</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="springBootActuator">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="| #{springboot.druid.title}|"> Vulnerable Scenario: Exposed Druid Monitor Console</span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/springboot/druid.pcapng" download="druid.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{springboot.traffic}">Traffic Analysis</a>
+                            </span>
+                        </h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <div style="display: flex; align-items: center;">
+                                            <p th:text="#{springboot.openLink}">Open link:</p>
+                                            <a style="color: red" target="_blank" href="/druid/index.html" th:text="#{springboot.druid.link}">Druid Misconfiguration</a>
+
+                                        </div>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{springboot.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{springboot.druid.tips}">Exposed Druid monitor console can leak datasource, SQL, URI, Session, and runtime data.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{springboot.vulnerableCode}">Vulnerable Code</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="springBootDruid">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; justify-content: space-between; align-items: center;height: 33.5px">
+                            <span class="iconfont icon-bug" th:text="|  #{springboot.jdbc.title}|">  Vulnerable Scenario: MySQL JDBC Deserialization</span>
+                            <span class="iconfont icon-liuliang1">
+                                <a href="/other/datapackage/springboot/mysql_jdbc.pcapng" download="mysql_jdbc.pcapng"
+                                   style="margin-right: 19px;color: #00bb00" th:text="#{springboot.traffic}">Traffic Analysis</a>
+                            </span>
+
+                        </h1>
+                        <div class="layui-tab layui-tab-brief">
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <blockquote class="layui-elem-quote main_btn">
+                                        <form class="layui-form" style="display: flex; justify-content: space-between;">
+                                            <div style="display: flex; align-items: center;">
+                                                <p>
+                                                    <a target="_blank" style="color: red" href="/springboot/vul?url=jdbc:mysql://ip:port/test?characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai&amp;autoDeserialize=true&amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;username=deser_URLDNS_http://xxx.dnslog.cn&amp;password=qwe">
+                                                        <span th:text="#{springboot.jdbc.fakeMysql}">Fake-MySQL-Server Vulnerability Test</span>
+                                                    </a> |
+                                                    <a target="_blank" style="color: red" href="/springboot/insert?command=open%20-a%20Calculator">
+                                                        <span th:text="#{springboot.jdbc.insertCommand}">Deserialization Command</span>
+                                                    </a>
+                                                </p>
+
+                                            </div>
+                                            <div style="display: flex; align-items: center;">
+                                                <button type="button" id="vul-jdbc-run" class="layui-btn layui-btn-normal"
+                                                        style="width: 100px; margin-left: 10px;"
+                                                        onclick="runSpringBootJdbc()">
+                                                    <span class="iconfont icon-zhihang" th:text="#{springboot.run}">Run</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </blockquote>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-bullhorn icon-tip"></i><span th:text="#{springboot.tips}">Tips</span></div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre style="color: #28333e;font-size: 15px;" th:text="#{springboot.jdbc.tips}">MySQL JDBC deserialization risk is usually related to untrusted JDBC URLs and dangerous connection parameters.</pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><i class="fa fa-warning icon-output"></i><span th:text="#{springboot.testResult}">Test Result</span>
+                                        </div>
+                                        <div class="layui-card-body layui-text layadmin-text">
+                                            <pre id="vul-jdbc-result" style="color: red;font-size: 15px;"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <h1 style="display: flex; align-items: center; height: 33.5px;">
+                            <span class="iconfont icon-code" style="height: 22.5px;" th:text="#{springboot.vulnerableCode}">Vulnerable Code</span>
+                        </h1>
+                        <div class="m-auto div-shadow shadow p-3 mb-5 bg-white rounded">
+                            <div class="code-editor" id="jdbcDeserial"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{common/common::script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    function runSpringBootJdbc() {
+        var result = document.getElementById("vul-jdbc-result");
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/springboot/jdbc", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    var res = JSON.parse(xhr.responseText);
+                    result.textContent = res && res.msg ? res.msg : /*[[#{springboot.jdbc.done}]]*/ "Request completed.";
+                } catch (e) {
+                    result.textContent = xhr.responseText || /*[[#{springboot.jdbc.done}]]*/ "Request completed.";
+                }
+            } else {
+                result.textContent = /*[[#{springboot.jdbc.failed}]]*/ "Request failed. Please check service status.";
+            }
+        };
+        xhr.send();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        layui.use(['layer', 'miniTab', 'common', 'form'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                common = layui.common,
+                miniTab = layui.miniTab,
+                form = layui.form;
+            miniTab.listen();
+            layer.msg(/*[[#{springboot.toast}]]*/ "SpringBoot Framework - Related Vulnerabilities")
+            var isEnglishSpringBoot = /*[[${#locale.language == 'en'}]]*/ false;
+
+            var cmConfig = {
+                lineNumbers: true,
+                lineWrapping: false,
+                indentUnit: 4,
+                indentWithTabs: true,
+                theme: 'juejin',
+                styleActiveLine: {nonEmpty: true},
+                fontSize: "18px",
+                mode: "text/x-java"
+            };
+
+            CodeMirror(document.getElementById("springBootSwagger"), Object.assign({}, cmConfig, {
+                value: isEnglishSpringBoot ? springBootSwagger : springBootSwaggerZh
+            }));
+            CodeMirror(document.getElementById("springBootActuator"), Object.assign({}, cmConfig, {
+                value: isEnglishSpringBoot ? springBootActuator : springBootActuatorZh
+            }));
+            CodeMirror(document.getElementById("springBootDruid"), Object.assign({}, cmConfig, {
+                value: isEnglishSpringBoot ? springBootDruid : springBootDruidZh
+            }));
+            CodeMirror(document.getElementById("jdbcDeserial"), Object.assign({}, cmConfig, {
+                value: isEnglishSpringBoot ? JdbcDeserial : JdbcDeserialZh
+            }));
+
+        });
+
+        $('.jdbc').hover(function () {
+            $(this).css('cursor', 'pointer');
+            layer.tips(/*[[#{springboot.jdbc.flowTip}]]*/ 'JDBC deserialization attack flow', this, {
+                tips: [1, '#0051ff'],
+                time: 2000
+            });
+        });
+
+        $('.jdbc').on('click', function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 1,
+                area: ['996px', '526px'],
+                shadeClose: true,
+                content: '<div style="text-align: center;"><img src="/images/vul/jdbc/jdbc.png" style="width: 100%; height: 100%;"></div>'
+            });
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>
