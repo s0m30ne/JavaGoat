@@ -3685,8 +3685,8 @@ const hardCodingZh = "function login() {\n" +
 
 // JS leak - webpack bundle
 const infoLeakJs = "var r = new i({\n" +
-    "    SecretId: \"EXAMPLE_COS_SECRET_ID_NOT_REAL\",\n" +
-    "    SecretKey: \"EXAMPLE_COS_SECRET_KEY_NOT_REAL\"\n" +
+    "    SecretId: \"AKID4xax3skP8jyDs6SZS5SZR5TcfSyC9p9H\",\n" +
+    "    SecretKey: \"vaz81e2B5j89iYB5FtIRJvHPIvJRJvHO\"\n" +
     "});\n" +
     "r.uploadFile({\n" +
     "    Bucket: \"official-website-1305607643\",\n" +
@@ -3701,8 +3701,8 @@ const infoLeakJs = "var r = new i({\n" +
     "    })\n" +
     "})";
 const infoLeakJsZh = "var r = new i({\n" +
-    "    SecretId: \"EXAMPLE_COS_SECRET_ID_NOT_REAL\",\n" +
-    "    SecretKey: \"EXAMPLE_COS_SECRET_KEY_NOT_REAL\"\n" +
+    "    SecretId: \"AKID4xax3skP8jyDs6SZS5SZR5TcfSyC9p9H\",\n" +
+    "    SecretKey: \"vaz81e2B5j89iYB5FtIRJvHPIvJRJvHO\"\n" +
     "});\n" +
     "r.uploadFile({\n" +
     "    Bucket: \"official-website-1305607643\",\n" +
